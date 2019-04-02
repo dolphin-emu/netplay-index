@@ -61,7 +61,7 @@ class Handler(RequestHandler):
                 return 'Missing parameters'
 
             if not database.is_sysop(user):
-                return 'Only sysop can delete users'
+                return 'Only sysop can create users'
 
             if database.login_exists(affected_username):
                 return 'User already exists'

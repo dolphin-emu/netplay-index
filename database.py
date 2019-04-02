@@ -86,7 +86,7 @@ def is_sysop(username):
     if value is None:
         return False
 
-    return value
+    return value[0]
 
 def can_ban(username):
     '''Check whether a user can ban hosts'''
@@ -120,7 +120,7 @@ def can_modify_backlist(username):
     if value is None:
         return False
 
-    return value
+    return value[0]
 
 def delete_login(username):
     '''Remove user'''
