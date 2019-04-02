@@ -9,6 +9,7 @@
       <th>Sysop?</th>
       <th>Can Ban?</th>
       <th>Can Modify Blacklist?</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -18,6 +19,14 @@
       <td>{{ user[1] }}</td>
       <td>{{ user[2] }}</td>
       <td>{{ user[3] }}</td>
+      <td>
+        <form method="POST">
+          {% module xsrf_form_html() %}
+          <input hidden type="text" name="action" value="delete_user"></input>
+          <input hidden type="text" name="username" value="{{ user[0] }}"></input>
+          <input type="submit" class="btn btn-danger" value="Remove"></input>
+        </form>
+      </td>
     </tr>
     {% end %}
     </td>
@@ -39,21 +48,6 @@
     <tr>
       <td></td>
       <td><input type="submit" class="btn btn-warning" value="Change Password"></td>
-    </tr>
-  </table>
-</form>
-<h3>Delete User</h3>
-<form method="POST">
-  {% module xsrf_form_html() %}
-  <input hidden type="text" class="form-control" name="action" value="delete_user"></input>
-  <table>
-    <tr>
-      <td>Username:</td>
-      <td><input type="text" class="form-control" name="username"></input></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><input type="submit" class="btn btn-danger" value="Delete"></td>
     </tr>
   </table>
 </form>
