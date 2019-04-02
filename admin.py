@@ -142,7 +142,7 @@ class Handler(RequestHandler):
         self.render('views/admin/{}.html'.format(view),
                     users=database.get_users(), banned_hosts=database.bans_get(),
                     blacklist=database.blacklist_get(), username=username, view=view,
-                    sessions=api.SESSIONS, hosts=api.HOSTS, error=error)
+                    sessions=api.SESSIONS, hosts=api.HOSTS, error=error, sysop=database.is_sysop(username))
 
     def post(self):
         '''Handle POST requests'''
@@ -166,4 +166,4 @@ class Handler(RequestHandler):
 
         self.render('views/admin/{}.html'.format(view),
                     users=database.get_users(), banned_hosts=database.bans_get(),
-                    blacklist=database.blacklist_get(), username=username, view=view, error=error)
+                    blacklist=database.blacklist_get(), username=username, view=view, error=error, sysop=database.is_sysop(username))

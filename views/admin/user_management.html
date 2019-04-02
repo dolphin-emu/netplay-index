@@ -1,6 +1,7 @@
 {% extends "../base.html" %}
 {% block title %}User Management{% end %}
 {% block content %}
+{% if sysop %}
 <h3>List of Users</h3>
 <table class="table table-striped">
   <thead class="thead-light">
@@ -20,29 +21,36 @@
       <td>{{ user[2] }}</td>
       <td>{{ user[3] }}</td>
       <td>
+        {% if sysop %}
         <form method="POST">
           {% module xsrf_form_html() %}
           <input hidden type="text" name="action" value="delete_user"></input>
           <input hidden type="text" name="username" value="{{ user[0] }}"></input>
           <input type="submit" class="btn btn-danger" value="Remove"></input>
         </form>
+        {% end %}
       </td>
     </tr>
     {% end %}
     </td>
   </tbody>
 </table>
+{% end %}
 <h3>Change Password</h3>
 <form method="POST">
   {% module xsrf_form_html() %}
   <input hidden type="text" class="form-control" name="action" value="change_password"></input>
   <table>
+      {% if sysop %}
     <tr>
       <td>Username:</td>
       <td><input type="text" class="form-control" name="username" value="{{ username }}"></input></td>
     </tr>
+    {% else %}
+    <input type="text" hidden name="username" value="{{ username }}"></input>
+    {% end %}
     <tr>
-      <td>Password:</td>
+      <td>New Password:</td>
       <td><input type="password" class="form-control" name="password"></input></td>
     </tr>
     <tr>
@@ -51,6 +59,7 @@
     </tr>
   </table>
 </form>
+ {% if sysop %}
 <h3>Create User</h3>
 <form method="POST">
   {% module xsrf_form_html() %}
@@ -82,4 +91,5 @@
     </tr>
   </table>
 </form>
+{% end %}
 {% end %}
