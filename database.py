@@ -32,11 +32,13 @@ def initialize():
 
     cur.execute('pragma user_version')
 
-    if cur.fetchone()[0] != DB_REVISION:
+    db_rev = cur.fetchone()[0] or DB_REVISION
+
+    if db_rev != DB_REVISION:
         print('FATAL: DB is outdated or from a newer version. Please run migrate.py')
         exit(1)
 
-    cur.execute('pragma user_version='+DB_REVISION)
+    cur.execute('pragma user_version='+str(DB_REVISION))
 
     # Initialize users
     cur.execute('''
