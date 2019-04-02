@@ -1,7 +1,7 @@
 '''Database helper'''
 
 import sqlite3
-import hashlib
+import bcrypt
 import re
 
 CONNECTION = None
@@ -16,7 +16,8 @@ def _commit():
 
 def _hash_password(password):
     '''Hashes a password for storing in the database'''
-    return hashlib.sha256(password.encode('UTF-8')).hexdigest()
+
+    return bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
 
 def initialize():
     '''Initialize database before usage'''
@@ -152,7 +153,7 @@ def check_login(username, password):
 
     hashed_password = hashed_password[0]
 
-    return _hash_password(password) == hashed_password
+    return bcrypt.checkpw(password.encode('UTF-8'), hashed_password)
 
 def get_users():
     '''Get all users'''
