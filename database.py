@@ -5,6 +5,7 @@ import bcrypt
 import re
 
 CONNECTION = None
+DB_REVISION = 0
 
 def _get_cursor():
     '''Returns a connection cursor'''
@@ -28,6 +29,14 @@ def initialize():
     CONNECTION = sqlite3.connect('main.db')
 
     cur = _get_cursor()
+
+    cur.execute('pragma user_version')
+
+    if cur.fetchone()[0] != DB_REVISION:
+        print('FATAL: DB is outdated or from a newer version. Please run migrate.py')
+        exit(1)
+
+    cur.execute('pragma user_version='+DB_REVISION)
 
     # Initialize users
     cur.execute('''
