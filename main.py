@@ -31,7 +31,8 @@ def make_app():
         (r'/v(?P<api_version>\d+)/(?P<action>[\w/]+)', api.Handler),
         (r'/login', login.Handler),
         (r'/admin', admin.Handler),
-    ], cookie_secret=os.urandom(32), static_path=os.path.join(os.path.dirname(__file__), "static"))
+    ], cookie_secret=os.urandom(32), xsrf_cookies=True,
+                                   static_path=os.path.join(os.path.dirname(__file__), "static"))
 
 if __name__ == '__main__':
     parse_command_line()

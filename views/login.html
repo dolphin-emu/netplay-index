@@ -2,6 +2,7 @@
 {% block title %}Login{% end %}
 {% block content %}
 <form method="POST">
+  {% module xsrf_form_html() %}
   <table>
     <tr>
       <td>Username:</td>

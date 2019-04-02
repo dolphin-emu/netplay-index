@@ -28,6 +28,7 @@
       </td>
       <td>
         <form method="POST">
+          {% module xsrf_form_html() %}
           <input hidden type="text"  class="form-control"  name="action" value="blacklist_remove"></input>          
           <input hidden type="text"  class="form-control" name="word" value="{{ item[0] }}"></input>
           <input type="submit" value="Remove" class="btn btn-danger"></input>
@@ -39,6 +40,7 @@
 </table>
 <h3>Add Entry</h3>
 <form method="POST">
+  {% module xsrf_form_html() %}
   <input hidden type="text" name="action" value="blacklist_add"></input>
   <table>
     <tr>
