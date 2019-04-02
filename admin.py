@@ -130,14 +130,14 @@ class Handler(RequestHandler):
         error = ''
 
         if not self.get_secure_cookie('logged_in'):
-            self.redirect('/login')
+            self.redirect('/login?view='+view)
             return
-
-        username = self.decode_argument(self.get_secure_cookie('logged_in'))
 
         if view not in ADMIN_VIEWS:
             view = 'admin'
             error = 'No such view'
+
+        username = self.decode_argument(self.get_secure_cookie('logged_in'))
 
         self.render('views/admin/{}.html'.format(view),
                     users=database.get_users(), banned_hosts=database.bans_get(),

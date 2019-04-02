@@ -29,9 +29,11 @@ class Login(RequestHandler):
         username = self.get_argument('username', default=None, strip=True)
         password = self.get_argument('password', default=None, strip=True)
 
+
         if database.check_login(username, password):
             self.set_secure_cookie('logged_in', username)
-            self.redirect('/admin')
+            view = self.get_argument('view', default='admin', strip=True)
+            self.redirect('/admin?view='+view)
             return
 
         self.render('views/login.html', error='Login failed.')
