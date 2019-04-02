@@ -29,7 +29,8 @@ def make_app():
     return tornado.web.Application([
         (r'/', MainHandler),
         (r'/v(?P<api_version>\d+)/(?P<action>[\w/]+)', api.Handler),
-        (r'/login', login.Handler),
+        (r'/login', login.Login),
+        (r'/logout', login.Logout),
         (r'/admin', admin.Handler),
     ], cookie_secret=os.urandom(32), xsrf_cookies=True,
                                    static_path=os.path.join(os.path.dirname(__file__), "static"))

@@ -4,8 +4,16 @@ from tornado.web import RequestHandler
 
 import database
 
+class Logout(RequestHandler):
+
+    def post(self):
+        '''Handle logouts'''
+        self.clear_cookie('logged_in')
+
+        self.render('views/logout.html')
+
 # pylint: disable=W0223
-class Handler(RequestHandler):
+class Login(RequestHandler):
     '''Handles login requests'''
     def get(self):
         '''Handle login page'''

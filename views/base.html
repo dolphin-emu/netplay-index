@@ -19,5 +19,13 @@
   <div id="content">
   <h2>{% block title %}{% end %}</h2>
   {% block content %}{% end %}
+  {% if globals().get('username', None) %}
+  <div id="logout">
+    <form method="POST" action="/logout">
+        {% module xsrf_form_html() %}
+        Logged in as {{ username }} <input type="submit" class="btn btn-primary" value="Logout"></input>
+    </form>
+  </div>
+  {% end %}
   </div>
 </body>
