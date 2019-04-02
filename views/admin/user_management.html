@@ -1,0 +1,88 @@
+{% extends "../base.html" %}
+{% block title %}User Management{% end %}
+{% block content %}
+<h3>List of Users</h3>
+<table class="table table-striped">
+  <thead class="thead-light">
+    <tr>
+      <th>Username</th>
+      <th>Sysop?</th>
+      <th>Can Ban?</th>
+      <th>Can Modify Blacklist?</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user[0] }}</td>
+      <td>{{ user[1] }}</td>
+      <td>{{ user[2] }}</td>
+      <td>{{ user[3] }}</td>
+    </tr>
+    {% end %}
+    </td>
+  </tbody>
+</table>
+<h3>Change Password</h3>
+<form method="POST">
+  <input hidden type="text" class="form-control" name="action" value="change_password"></input>
+  <table>
+    <tr>
+      <td>Username:</td>
+      <td><input type="text" class="form-control" name="username" value="{{ username }}"></input></td>
+    </tr>
+    <tr>
+      <td>Password:</td>
+      <td><input type="password" class="form-control" name="password"></input></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="submit" class="btn btn-warning" value="Change Password"></td>
+    </tr>
+  </table>
+</form>
+<h3>Delete User</h3>
+<form method="POST">
+  <input hidden type="text" class="form-control" name="action" value="delete_user"></input>
+  <table>
+    <tr>
+      <td>Username:</td>
+      <td><input type="text" class="form-control" name="username"></input></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="submit" class="btn btn-danger" value="Delete"></td>
+    </tr>
+  </table>
+</form>
+<h3>Create User</h3>
+<form method="POST">
+  <input hidden type="text" class="form-control" name="action" value="create_user"></input>
+    <table>
+    <tr>
+      <td>Username:</td>
+      <td><input type="text" class="form-control" name="username"></input></td>
+    </tr>
+    <tr>
+      <td>Password:</td>
+      <td><input type="text" class="form-control" name="password"></input></td>
+    </tr>
+    <tr>
+      <td>Sysop?</td>
+      <td><input type="checkbox" name="sysop"></input></td>
+    </tr>
+    <tr>
+      <td>Can Ban?</td>
+      <td><input type="checkbox" name="can_ban"></input></td>
+    </tr>
+    <tr>
+      <td>Modify Blacklist?</td>
+      <td><input type="checkbox" name="can_modify_blacklist"></input></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="submit" class="btn btn-secondary" value="Create"></input></td>
+    </tr>
+  </table>
+</form>
+{% end %}

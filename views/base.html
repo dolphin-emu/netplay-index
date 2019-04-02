@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}NetPlay Index{% end %}</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="/static/bootstrap-4.3.1/css/bootstrap.min.css">
+  <script src="/static/bootstrap-4.3.1/js/bootstrap.min.js"></script>
+
+  <!-- My Stylesheet -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  {% if globals().get('error', None) %}
+  <div class="alert alert-danger">
+    {{ error }}
+  </div>
+  {% end %}
+  <div id="content">
+  <h2>{% block title %}{% end %}</h2>
+  {% block content %}{% end %}
+  </div>
+</body>

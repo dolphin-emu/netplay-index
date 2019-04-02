@@ -1,0 +1,19 @@
+body
+{
+    background: #dfdfdf;
+}
+
+#content
+{
+    width: 85%;
+
+    margin: 50px;
+    padding: 10px;
+    
+    border-style: solid;
+    border-color: black;
+    border-radius: 10px;
+    border-width: 1px;
+
+    background-color: white;
+}

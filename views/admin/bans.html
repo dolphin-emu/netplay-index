@@ -1,0 +1,57 @@
+{% extends "../base.html" %}
+{% block title %}Banned Hosts{% end %}
+{% block content %}
+<table class="table table-striped">
+  <thead class="thead-light">
+    <tr>
+      <th>Host</th>
+      <th>Date</th>
+      <th>Added by</th>
+      <th>Reason</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in banned_hosts %}
+    <tr>
+      <td>
+        {{ escape(item[0]) }}
+      </td>
+      <td>
+        {{ escape(item[1]) }}
+      </td>
+      <td>
+        {{ escape(item[2]) }}
+      </td>
+      <td>
+        {{ item[3] }}
+      </td>
+      <td>
+        <form method="POST">
+          <input hidden type="text" name="action" value="ban_remove"></input>          
+          <input hidden type="text" name="host" value="{{ item[0] }}"></input>
+          <input type="submit" value="Remove" class="btn btn-danger"></input>
+        </form>
+      </td>
+    </tr>
+    {% end %}
+  </tbody>
+</table>
+<h3>Add Entry</h3>
+<form method="POST">
+  <input hidden type="text"  class="form-control" name="action" value="ban_add"></input>
+  <table>
+    <tr>
+      <td>Host:</td>
+      <td><input type="text"  class="form-control" name="host"></input><td>
+    </tr>
+    <tr>
+      <td>Reason:</td>
+      <td><input type="text" class="form-control" name="reason"></input><td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="submit" class="btn btn-warning" value="Add to banlist"></input><td>
+    </tr>
+  </table>
+{% end %}
