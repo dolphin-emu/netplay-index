@@ -1,25 +1,23 @@
 body
 {
-    background: #dfdfdf;
+    background: #efefef;
 }
 
 #content
 {
     width: 85%;
 
-    margin: 50px;
-    padding: 10px;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
     
-    border-style: solid;
-    border-color: black;
-    border-radius: 10px;
-    border-width: 1px;
-
     background-color: white;
 }
 
 #footer
 {
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 25px;
     text-align: center;
-    color: #555555;
 }

@@ -3,19 +3,14 @@
 {% block content %}
 <form method="POST">
   {% module xsrf_form_html() %}
-  <table>
-    <tr>
-      <td>Username:</td>
-      <td><input type="text" class="form-control" name="username"></td>
-    </tr>
-    <tr>
-      <td>Password:</td>
-      <td><input type="password" class="form-control" name="password"></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><input type="submit" class="btn btn-primary" value="Login"></td>
-    </tr>
-  </table>
+  <div class="form-group row">
+    <label for="username" class="col-form-label col-sm-2">Username</label>
+    <input type="text" class="form-control col-sm-10" name="username">
+  </div>
+  <div class="form-group row">
+    <label for="password" class="col-form-label col-sm-2">Password</label>
+    <input type="password" class="form-control col-sm-10" name="password">
+  </div>
+  <input type="submit" class="btn btn-primary" value="Login">
 </form>
 {% end %}

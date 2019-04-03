@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
   <meta charset="UTF-8" />
   <title>{% block title %}NetPlay Index{% end %}</title>
@@ -14,7 +15,7 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/admin/overview">NetPlay Index</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -35,9 +36,9 @@
         </li>
       </ul>
       {% if globals().get('username', None) %}
-      <form method="POST" class="form-inline my-2 my-lg-0" action="/logout">
+      <form method="POST" class="form-inline  my-2 my-lg-0" action="/logout">
         {% module xsrf_form_html() %}
-        Logged in as {{ username }}
+        <span class="navbar-text">Logged in as {{ username }}</span>
         <input type="submit" style="margin-left: 10px" class="btn btn-primary my-2 my-sm-0" value="Logout"></input>
       </form>
       {% end %}
@@ -49,12 +50,16 @@
     {{ error }}
   </div>
   {% end %}
-  <div id="content">
-  <h2>{% block title %}{% end %}</h2>
-  {% block content %}{% end %}
-  </div>
-  <div id="footer">
-    Dolphin NetPlay Index (c) <a target="_blank" href="https://github.com/spycrab">spycrab</a>.
-    <a href="https://github.com/spycrab/netplay-index">Source</a>
+  <div class="card" id="content">
+    <div class="card-body">
+      <h2 class="card-title">
+        {% block title %}{% end %}
+      </h2>
+      {% block content %}{% end %}
+      <p id="footer">
+        <a href="https://github.com/spycrab/netplay-index">netplay-index</a> © 2019, <a target="_blank" href="https://github.com/spycrab">spycrab</a>
+      </p>
+    </div>
   </div>
 </body>
+</html>
