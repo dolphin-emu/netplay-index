@@ -15,6 +15,9 @@ LAST_SESSION_CLEANUP = 0
 SESSION_CLEANUP_DELAY = 30
 SESSION_TIMEOUT_SECONDS = 15
 
+VALID_REGIONS = ['AF', 'CN', 'EA', 'EU', 'NA', 'OC']
+SESSION_MAX_STRING_LENGTH = 32
+
 def _cleanup_sessions():
     to_delete = []
     for key in SESSIONS:
@@ -45,10 +48,43 @@ class Handler(RequestHandler):
                 self.write({'status': 'BLACKLISTED_WORD', 'parameter': key})
                 return
 
+        if session['region'] not in VALID_REGIONS:
+            self.write({'status': 'BAD_REGION'})
+            return
+
+        if not 0 < len(session['name']) < SESSION_MAX_STRING_LENGTH:
+            self.write({'status': 'BAD_NAME_LENGTH'})
+            return
+
+        if not 0 < len(session['game']) < SESSION_MAX_STRING_LENGTH:
+            self.write({'status': 'BAD_GAME_LENGTH'})
+            return
+
+        if not 0 < len(session['server_id']) < SESSION_MAX_STRING_LENGTH:
+            self.write({'status': 'BAD_SERVER_ID_LENGTH'})
+            return
+
+        if not 0 < int(session['port']) <= 65535:
+            self.write({'status': 'BAD_PORT'})
+            return
+
+
+        session['timestamp'] = time.time()
+
+        try:
+            session['in_game'] = bool(int(session['in_game']))
+            session['password'] = bool(int(session['password']))
+
+            session['port'] = int(session['port'])
+            session['player_count'] = int(session['player_count'])
+        except ValueError:
+            self.write({'status': 'PARSING_ERROR'})
+            return
+
         secret = generate_secret()
 
         SESSIONS[secret] = session
-        SESSIONS[secret]['timestamp'] = time.time()
+
         HOSTS[secret] = get_ip(self)
 
         self.write({'status': 'OK', 'secret': secret})
