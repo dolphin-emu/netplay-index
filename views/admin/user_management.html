@@ -17,9 +17,9 @@
     {% for user in users %}
     <tr>
       <td>{{ user[0] }}</td>
-      <td>{{ user[1] }}</td>
-      <td>{{ user[2] }}</td>
-      <td>{{ user[3] }}</td>
+      <td>{% if user[1] %}Yes{% else %}No{% end %}</td>
+      <td>{% if user[2] %}Yes{% else %}No{% end %}</td>
+      <td>{% if user[3] %}Yes{% else %}No{% end %}</td>
       <td>
         {% if sysop %}
         <form method="POST">
