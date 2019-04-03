@@ -22,16 +22,16 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <li class="nav-item {% if globals().get('view', None) == 'server_list' %} active {% end %}">
           <a class="nav-link" href="/admin/server_list">Servers</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if globals().get('view', None) == 'blacklist' %} active {% end %}">
           <a class="nav-link" href="/admin/blacklist">Blacklist</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if globals().get('view', None) == 'bans' %} active {% end %}">
           <a class="nav-link" href="/admin/bans">Banlist</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if globals().get('view', None) == 'user_management' %} active {% end %}">
           <a class="nav-link" href="/admin/user_management">Users</a>
         </li>
       </ul>
