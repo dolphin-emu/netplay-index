@@ -3,6 +3,9 @@
   <meta charset="UTF-8" />
   <title>{% block title %}NetPlay Index{% end %}</title>
 
+  <!-- jQuery -->
+  <script src="/static/jquery-3.3.1.min.js"></script>
+
   <!-- Bootstrap -->
   <link rel="stylesheet" href="/static/bootstrap-4.3.1/css/bootstrap.min.css">
   <script src="/static/bootstrap-4.3.1/js/bootstrap.min.js"></script>
@@ -17,7 +20,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" href="/admin/server_list">Servers</a>
         </li>
@@ -31,17 +34,14 @@
           <a class="nav-link" href="/admin/user_management">Users</a>
         </li>
       </ul>
-    </div>
-    <div>
       {% if globals().get('username', None) %}
-      <div id="logout">
-        <form method="POST" action="/logout">
-          {% module xsrf_form_html() %}
-          Logged in as {{ username }} <input type="submit" class="btn btn-primary" value="Logout"></input>
-        </form>
-      </div>
+      <form method="POST" class="form-inline my-2 my-lg-0" action="/logout">
+        {% module xsrf_form_html() %}
+        Logged in as {{ username }}
+        <input type="submit" style="margin-left: 10px" class="btn btn-primary my-2 my-sm-0" value="Logout"></input>
+      </form>
       {% end %}
-
+    </div>
   </nav>
 
   {% if globals().get('error', None) %}
