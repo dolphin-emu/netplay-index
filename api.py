@@ -54,7 +54,8 @@ class Handler(RequestHandler):
 
         session = {}
         for key in ['name', 'region', 'game', 'server_id',
-                    'port', 'player_count', 'in_game', 'password', 'version']:
+                    'port', 'player_count', 'in_game',
+                    'password', 'version', 'method']:
             session[key] = self.get_argument(key, default=None, strip=True)
             if session[key] is None:
                 self.write({'status': 'MISSING_PARAMETER', 'parameter': key})
@@ -82,7 +83,6 @@ class Handler(RequestHandler):
         if not 0 < int(session['port']) <= 65535:
             self.write({'status': 'BAD_PORT'})
             return
-
 
         session['timestamp'] = time.time()
 
