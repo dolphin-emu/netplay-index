@@ -29,7 +29,7 @@ class AdminHandler(RequestHandler):
         '''Render an admin template'''
         self.render('{}.html'.format(self.view),
                     users=database.get_users(), banned_hosts=database.bans_get(),
-                    sessions=api.SESSIONS, blacklist=database.blacklist_get(),
+                    sessions=api.SESSIONS, hosts=api.HOSTS, blacklist=database.blacklist_get(),
                     username=self.get_username(), view=self.view, error=self.error,
                     sysop=database.is_sysop(self.get_username()))
 
