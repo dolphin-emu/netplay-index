@@ -1,0 +1,3 @@
+'''Initialize module'''
+
+name = "admin"

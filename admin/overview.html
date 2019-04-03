@@ -1,0 +1,21 @@
+{% extends "../base.html" %}
+{% block title %}Admin Panel{% end %}
+{% block content %}
+  <h3>Welcome, {{ username }}!</h3>
+
+  Actions:
+  <ul>
+    <li>
+      <a href="/admin/server_list">Server List</a> - Look at and remove individual sessions
+    </li>
+    <li>
+      <a href="/admin/bans">Banned Hosts</a> - Review and remove banned hosts
+    </li>
+    <li>
+      <a href="/admin/blacklist">Blacklist</a> - Blacklist certain words from being used
+    </li>
+    <li>
+      <a href="/admin/user_management">User Management</a> - Change passwords, add and remove users
+    </li>
+  </ul>
+{% end %}

@@ -4,13 +4,13 @@ from tornado.web import RequestHandler
 
 import database
 
+# pylint: disable=W0223
 class Logout(RequestHandler):
-
+    '''Logout handler'''
     def post(self):
         '''Handle logouts'''
         self.clear_cookie('logged_in')
-
-        self.render('views/logout.html')
+        self.render('logout.html')
 
 # pylint: disable=W0223
 class Login(RequestHandler):
@@ -18,10 +18,11 @@ class Login(RequestHandler):
     def get(self):
         '''Handle login page'''
         if self.get_secure_cookie('logged_in'):
-            self.redirect('/admin')
+            view = self.get_argument('view', default='overview', strip=True)
+            self.redirect('/admin/'+view)
             return
 
-        self.render('views/login.html')
+        self.render('login.html')
 
     def post(self):
         '''Handle login attempts'''
@@ -32,8 +33,8 @@ class Login(RequestHandler):
 
         if database.check_login(username, password):
             self.set_secure_cookie('logged_in', username)
-            view = self.get_argument('view', default='admin', strip=True)
-            self.redirect('/admin?view='+view)
+            view = self.get_argument('view', default='overview', strip=True)
+            self.redirect('/admin/'+view)
             return
 
-        self.render('views/login.html', error='Login failed.')
+        self.render('login.html', error='Login failed.')

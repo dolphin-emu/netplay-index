@@ -7,11 +7,15 @@ import tornado.ioloop
 from tornado.options import define, options, parse_command_line
 from tornado.web import RequestHandler
 
-import admin
 import api
-import login
+import login.login
 import database
 import util
+import admin.user_management
+import admin.server_list
+import admin.overview
+import admin.blacklist
+import admin.bans
 
 define('port', default=8000, help='Port to listen on', type=int)
 define('add_sysop', default=None, help='Add a new sysop via the command line')
@@ -29,9 +33,13 @@ def make_app():
     return tornado.web.Application([
         (r'/', MainHandler),
         (r'/v(?P<api_version>\d+)/(?P<action>[\w/]+)', api.Handler),
-        (r'/login', login.Login),
-        (r'/logout', login.Logout),
-        (r'/admin', admin.Handler),
+        (r'/login', login.login.Login),
+        (r'/logout', login.login.Logout),
+        (r'/admin/overview', admin.overview.Handler),
+        (r'/admin/blacklist', admin.blacklist.Handler),
+        (r'/admin/bans', admin.bans.Handler),
+        (r'/admin/user_management', admin.user_management.Handler),
+        (r'/admin/server_list', admin.server_list.Handler),
     ], cookie_secret=os.urandom(32), xsrf_cookies=True,
                                    static_path=os.path.join(os.path.dirname(__file__), "static"))
 

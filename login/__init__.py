@@ -1,0 +1,3 @@
+'''Initialize package'''
+
+name = "login"
