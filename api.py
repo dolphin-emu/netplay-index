@@ -1,5 +1,6 @@
 '''Handle API requests'''
 
+import re
 import time
 
 from tornado.web import RequestHandler
@@ -27,6 +28,20 @@ def _cleanup_sessions():
     for key in to_delete:
         del SESSIONS[key]
 
+def _filter_string(sessions, key, value, match = False):
+    filtered_sessions = []
+
+    for session in sessions:
+        if match:
+            if re.match('.*' + value + '.*', str(session[key])):
+                filtered_sessions.append(session)
+        else:
+            if session[key] == value:
+                filtered_sessions.append(session)
+
+
+    return filtered_sessions
+
 # pylint: disable=W0223
 class Handler(RequestHandler):
     '''Handler for all API requests'''
@@ -39,7 +54,7 @@ class Handler(RequestHandler):
 
         session = {}
         for key in ['name', 'region', 'game', 'server_id',
-                    'port', 'player_count', 'in_game', 'password']:
+                    'port', 'player_count', 'in_game', 'password', 'version']:
             session[key] = self.get_argument(key, default=None, strip=True)
             if session[key] is None:
                 self.write({'status': 'MISSING_PARAMETER', 'parameter': key})
@@ -135,7 +150,39 @@ class Handler(RequestHandler):
             LAST_SESSION_CLEANUP = time.time()
             _cleanup_sessions()
 
-        self.write({'status': 'OK', 'sessions': list(SESSIONS.values())})
+        name = self.get_argument('name', default=None)
+        game = self.get_argument('game', default=None)
+        password = self.get_argument('password', default=None)
+        region = self.get_argument('region', default=None)
+        version = self.get_argument('version', default=None)
+        in_game = self.get_argument('in_game', default=None)
+
+        sessions = list(SESSIONS.values())
+
+        if name is not None:
+            sessions = _filter_string(sessions, 'name', name, True)
+
+        if game is not None:
+            sessions = _filter_string(sessions, 'game', game, True)
+
+        if region is not None:
+            sessions = _filter_string(sessions, 'region', region)
+
+        if version is not None:
+            sessions = _filter_string(sessions, 'version',version)
+
+        try:
+            if password is not None:
+                sessions = _filter_string(sessions, 'password', bool(int(password)))
+
+            if in_game is not None:
+                sessions = _filter_string(sessions, 'in_game', bool(int(in_game)))
+        except ValueError:
+            self.write({'status': 'PARSE_ERROR'})
+            return
+
+
+        self.write({'status': 'OK', 'sessions': sessions})
 
     def get(self, api_version, action):
         '''Answer get requests'''
