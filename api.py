@@ -124,7 +124,11 @@ class Handler(RequestHandler):
             SESSIONS[secret]['game'] = game
 
         if in_game is not None:
-            SESSIONS[secret]['in_game'] = in_game
+            try:
+                SESSIONS[secret]['in_game'] = bool(int(in_game))
+            except ValueError:
+                self.write({'status': 'PARSING_ERROR'})
+                return
 
         self.write({'status': 'OK'})
 
