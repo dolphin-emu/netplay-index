@@ -29,7 +29,7 @@ def _filter_string(sessions, key, value, match=False):
 
     for session in sessions:
         if match:
-            if re.match(".*" + value + ".*", str(session[key])):
+            if re.match(".*" + value + ".*", str(session[key]), re.IGNORECASE):
                 filtered_sessions.append(session)
         else:
             if session[key] == value:
