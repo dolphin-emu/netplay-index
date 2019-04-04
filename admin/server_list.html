@@ -7,6 +7,9 @@
       <th>Region</th>
       <th>Name</th>
       <th>Game</th>
+      <th>Has Password?</th>
+      <th>Players</th>
+      <th>Version</th>
       <th>Host</th>
       <th></th>
     </tr>
@@ -22,6 +25,19 @@
       </td>
       <td>
         {{ escape(sessions[session]['game']) }}
+      </td>
+      <td>
+        {% if sessions[session]['password'] %}
+        Yes
+        {% else %}
+        No
+        {% end %}
+      </td>
+      <td>
+        {{ sessions[session]['player_count'] }}
+      </td>
+      <td>
+        {{ escape(sessions[session]['version']) }}
       </td>
       <td>
         {{ escape(hosts[session]) }}
