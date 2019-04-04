@@ -7,23 +7,17 @@ from tornado.web import RequestHandler
 from util import check_origin, generate_secret, get_ip
 
 import database
+import settings
 
 SESSIONS = {}
 HOSTS = {}
 
 LAST_SESSION_CLEANUP = 0
 
-SESSION_CLEANUP_DELAY = 30
-SESSION_TIMEOUT_SECONDS = 15
-
-VALID_REGIONS = ["AF", "CN", "EA", "EU", "NA", "OC"]
-SESSION_MAX_STRING_LENGTH = 64
-
-
 def _cleanup_sessions():
     to_delete = []
     for key in SESSIONS:
-        if time.time() - SESSIONS[key]["timestamp"] > SESSION_TIMEOUT_SECONDS:
+        if time.time() - SESSIONS[key]["timestamp"] > settings.SESSION_TIMEOUT_SECONDS:
             to_delete.append(key)
 
     for key in to_delete:
@@ -76,19 +70,19 @@ class Handler(RequestHandler):
                 self.write({"status": "BLACKLISTED_WORD", "parameter": key})
                 return
 
-        if session["region"] not in VALID_REGIONS:
+        if session["region"] not in settings.VALID_REGIONS:
             self.write({"status": "BAD_REGION"})
             return
 
-        if not 0 < len(session["name"]) < SESSION_MAX_STRING_LENGTH:
+        if not 0 < len(session["name"]) < settings.SESSION_MAX_STRING_LENGTH:
             self.write({"status": "BAD_NAME_LENGTH"})
             return
 
-        if not 0 < len(session["game"]) < SESSION_MAX_STRING_LENGTH:
+        if not 0 < len(session["game"]) < settings.SESSION_MAX_STRING_LENGTH:
             self.write({"status": "BAD_GAME_LENGTH"})
             return
 
-        if not 0 < len(session["server_id"]) < SESSION_MAX_STRING_LENGTH:
+        if not 0 < len(session["server_id"]) < settings.SESSION_MAX_STRING_LENGTH:
             self.write({"status": "BAD_SERVER_ID_LENGTH"})
             return
 
@@ -165,7 +159,7 @@ class Handler(RequestHandler):
         # pylint: disable=W0603
         global LAST_SESSION_CLEANUP
 
-        if time.time() - LAST_SESSION_CLEANUP > SESSION_CLEANUP_DELAY:
+        if time.time() - LAST_SESSION_CLEANUP > settings.SESSION_CLEANUP_DELAY:
             LAST_SESSION_CLEANUP = time.time()
             _cleanup_sessions()
 
