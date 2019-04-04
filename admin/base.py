@@ -1,16 +1,23 @@
 '''Base handler that all other admin views are based on'''
 
+from abc import abstractmethod
+
 from tornado.web import RequestHandler
 
-import api
 import database
 
 # pylint: disable=W0223
 class AdminHandler(RequestHandler):
-    '''Base handler'''
-    def set_view(self, view):
-        '''Set view to render'''
-        self.view = view
+    '''Base handler for admin URLs'''
+
+    @abstractmethod
+    def view(self):
+        '''Returns the view to render'''
+        raise NotImplementedError
+
+    def template_args(self):
+        '''Additional arguments needed by templates'''
+        return {}
 
     def set_error(self, error):
         '''Set error'''
@@ -27,17 +34,24 @@ class AdminHandler(RequestHandler):
 
     def admin_render(self):
         '''Render an admin template'''
-        self.render('{}.html'.format(self.view),
-                    users=database.get_users(), banned_hosts=database.bans_get(),
-                    sessions=api.SESSIONS, hosts=api.HOSTS, blacklist=database.blacklist_get(),
-                    username=self.get_username(), view=self.view, error=self.error,
-                    sysop=database.is_sysop(self.get_username()))
+
+        template_args = {
+            'username': self.get_username(),
+            'view': self.view(),
+            'error': self.error,
+            'sysop': database.is_sysop(self.get_username())
+        }
+
+        template_args.update(self.template_args())
+
+        self.render('{}.html'.format(self.view()),
+                    **template_args)
 
     def post(self):
         '''Handle POST and forward it to child classes'''
         self.set_error('')
         if not self.get_secure_cookie('logged_in'):
-            self.redirect('/login?view='+self.view)
+            self.redirect('/login?view='+self.view())
             return
 
         self.admin_post()
@@ -49,7 +63,7 @@ class AdminHandler(RequestHandler):
         '''Handle GET and forward it to child classes'''
         self.set_error('')
         if not self.get_secure_cookie('logged_in'):
-            self.redirect('/login?view='+self.view)
+            self.redirect('/login?view='+self.view())
             return
 
         self.admin_get()

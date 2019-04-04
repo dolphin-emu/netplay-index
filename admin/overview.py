@@ -5,6 +5,6 @@ from admin.base import AdminHandler
 # pylint: disable=W0223
 class Handler(AdminHandler):
     '''Handle admin overview'''
-    def initialize(self):
-        '''Set view name'''
-        self.set_view("overview")
+    def view(self):
+        '''View to display'''
+        return 'overview'

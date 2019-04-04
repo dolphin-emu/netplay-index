@@ -7,9 +7,13 @@ import database
 class Handler(AdminHandler):
     '''Ban list'''
 
-    def initialize(self):
-        '''Set view name'''
-        self.set_view('bans')
+    def view(self):
+        '''Return view to use'''
+        return 'bans'
+
+    def template_args(self):
+        '''Additional parameters needed by the template'''
+        return {'banned_hosts': database.bans_get()}
 
     def admin_post(self):
         '''Handle actions'''

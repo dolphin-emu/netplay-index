@@ -6,10 +6,14 @@ import database
 # pylint: disable=W0223
 class Handler(AdminHandler):
     '''User Management View'''
-    def initialize(self):
-        '''Set view name'''
-        self.set_view("user_management")
+    def view(self):
+        '''Set view to use'''
+        return 'user_management'
 
+    def template_args(self):
+        '''Additional template arguments'''
+        return {'users': database.get_users()}
+    
     def change_user_password(self, username, password):
         '''Change username's password'''
         if not username or not password:
