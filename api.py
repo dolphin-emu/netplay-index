@@ -84,6 +84,10 @@ class Handler(RequestHandler):
             self.write({'status': 'BAD_PORT'})
             return
 
+        if session['method'] not in ['direct', 'traversal']:
+            self.write({'status': 'BAD_METHOD'})
+            return
+
         session['timestamp'] = time.time()
 
         try:
