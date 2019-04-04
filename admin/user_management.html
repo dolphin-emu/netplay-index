@@ -83,19 +83,20 @@
               <label class="form-label-for col-sm-4" for="password">Password</label>
               <input type="text" class="form-control col-sm-6" name="password"></input>
             </div>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" name="sysop"></input>
-              <label class="form-check-label" for="can_ban">Sysop</label>
+            <div class="form-group">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="sysop"></input>
+                <label class="form-check-label" for="can_ban">Sysop</label>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="can_ban"></input>
+                <label class="form-check-label" for="can_ban">Allowed to ban</label>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="can_modify_blacklist"></input>
+                <label class="form-check-label" for="can_modify_blacklist">Allowed to modify blacklist</label>
+              </div>
             </div>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" name="can_ban"></input>
-              <label class="form-check-label" for="can_ban">Allowed to ban</label>
-            </div>
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" name="can_modify_blacklist"></input>
-              <label class="form-check-label" for="can_modify_blacklist">Allowed to modify blacklist</label>
-            </div>
-            
             <input type="submit" class="btn btn-secondary" value="Create"></input>
         </div>
       </div>
