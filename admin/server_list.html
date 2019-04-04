@@ -27,8 +27,13 @@
         {{ escape(hosts[session]) }}
       </td>
       <td>
-        <a href="/v0/session/remove?secret={{ escape(session) }}" target="_blank">Remove</a>
-        </td>
+        <form method="POST">
+          {% module xsrf_form_html() %}
+          <input hidden type="text" name="action" value="session_remove"></input>
+          <input hidden type="text" name="secret" value="{{ session }}"></input>
+          <input type="submit" class="btn btn-danger" value="Remove"></input>
+        </form>
+      </td>
     </tr>
     {% end %}
   </tbody>
