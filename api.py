@@ -49,6 +49,10 @@ class Handler(RequestHandler):
             self.write({"status": "BAD_ORIGIN"})
             return
 
+        if list(HOSTS.values()).count(get_ip(self)) > settings.MAXIMUM_SESSIONS_PER_HOST:
+            self.write({"status": "TOO_MANY_SESSIONS"})
+            return
+
         session = {}
         for key in [
             "name",

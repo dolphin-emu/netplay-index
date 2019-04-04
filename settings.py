@@ -14,9 +14,10 @@ VALID_REGIONS = ["AF", "CN", "EA", "EU", "NA", "OC"]
 # The maximum size transmitted string fields are allowed to have
 SESSION_MAX_STRING_LENGTH = 64
 
+# The maximum amount of sessions a single host can have simultaneously
+MAXIMUM_SESSIONS_PER_HOST = 5
+
 ## Login
 
 # How long every single login attempt should take in seconds
 LOGIN_ATTEMPT_DELAY = 1
-
-
