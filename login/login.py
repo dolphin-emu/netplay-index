@@ -1,8 +1,11 @@
 """Handle login logic"""
 
+import time
+
 from tornado.web import RequestHandler
 
 import database
+import settings
 
 # pylint: disable=W0223
 class Logout(RequestHandler):
@@ -33,6 +36,8 @@ class Login(RequestHandler):
         username = self.get_argument("username", default=None, strip=True)
         password = self.get_argument("password", default=None, strip=True)
 
+        time.sleep(settings.LOGIN_ATTEMPT_DELAY)
+        
         if database.check_login(username, password):
             self.set_secure_cookie("logged_in", username)
             view = self.get_argument("view", default="overview", strip=True)
