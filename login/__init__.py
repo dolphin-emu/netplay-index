@@ -1,3 +1,3 @@
-'''Initialize package'''
+"""Initialize package"""
 
 name = "login"

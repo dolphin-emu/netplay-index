@@ -1,3 +1,3 @@
-'''Initialize module'''
+"""Initialize module"""
 
 name = "admin"
