@@ -16,6 +16,8 @@ function dynload_init()
                 return;
             }
 
+            document.title = $("#title").text();
+
             $(".nav-item").removeClass('active');
             item.parent().addClass('active');
         });
