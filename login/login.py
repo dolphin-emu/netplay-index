@@ -14,7 +14,7 @@ class Logout(RequestHandler):
     def post(self):
         """Handle logouts"""
         self.clear_cookie("logged_in")
-        self.render("logout.html")
+        self.render("logout.html", ajax=False)
 
 
 # pylint: disable=W0223
@@ -28,7 +28,7 @@ class Login(RequestHandler):
             self.redirect("/admin/" + view)
             return
 
-        self.render("login.html")
+        self.render("login.html", ajax=False)
 
     def post(self):
         """Handle login attempts"""
@@ -37,7 +37,7 @@ class Login(RequestHandler):
         password = self.get_argument("password", default=None, strip=True)
 
         time.sleep(settings.LOGIN_ATTEMPT_DELAY)
-        
+
         if database.check_login(username, password):
             self.set_secure_cookie("logged_in", username)
             view = self.get_argument("view", default="overview", strip=True)

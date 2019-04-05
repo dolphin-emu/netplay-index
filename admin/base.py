@@ -35,11 +35,14 @@ class AdminHandler(RequestHandler):
     def admin_render(self):
         """Render an admin template"""
 
+        ajax = self.get_argument("ajax", default=False)
+
         template_args = {
             "username": self.get_username(),
             "view": self.view(),
             "error": self.error,
             "sysop": database.is_sysop(self.get_username()),
+            "ajax": ajax
         }
 
         template_args.update(self.template_args())
@@ -61,6 +64,11 @@ class AdminHandler(RequestHandler):
         """Handle GET and forward it to child classes"""
         self.set_error("")
         if not self.get_secure_cookie("logged_in"):
+
+            if self.get_argument("ajax", default=False):
+                self.write('ERROR')
+                return
+
             self.redirect("/login?view=" + self.view())
             return
 

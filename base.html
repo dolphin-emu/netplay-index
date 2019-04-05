@@ -1,3 +1,14 @@
+{% if ajax %}
+<div class="card-body">
+  <h2 class="card-title">
+    {% block title %}{% end %}
+  </h2>
+  {% block content %}{% end %}
+  <p id="footer">
+    <a target="_blank" href="https://github.com/spycrab/netplay-index">netplay-index</a> © 2019, <a target="_blank" href="https://github.com/spycrab">spycrab</a>
+  </p>
+</div>
+{% else %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +24,9 @@
 
   <!-- My Stylesheet -->
   <link rel="stylesheet" href="/static/style.css">
+
+  <!-- Dynamically load -->
+  <script src="/static/dynload.js"></script>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -38,7 +52,7 @@
       {% if globals().get('username', None) %}
       <form method="POST" class="form-inline  my-2 my-lg-0" action="/logout">
         {% module xsrf_form_html() %}
-        <span class="navbar-text">Logged in as {{ username }}</span>
+        <span id="logged-in" class="navbar-text">Logged in as {{ username }}</span>
         <input type="submit" style="margin-left: 10px" class="btn btn-primary my-2 my-sm-0" value="Logout"></input>
       </form>
       {% end %}
@@ -63,3 +77,4 @@
   </div>
 </body>
 </html>
+{% end %}
