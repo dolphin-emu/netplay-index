@@ -17,6 +17,8 @@ SESSION_MAX_STRING_LENGTH = 64
 # The maximum amount of sessions a single host can have simultaneously
 MAXIMUM_SESSIONS_PER_HOST = 5
 
+GEOIP_DATABASE_PATH = "GeoLite2-Country.mmdb"
+
 ## Login
 
 # How long every single login attempt should take in seconds

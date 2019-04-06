@@ -8,7 +8,7 @@ from admin.base import AdminHandler
 class Handler(AdminHandler):
     def template_args(self):
         """Return additional template args"""
-        return {"sessions": api.SESSIONS, "hosts": api.HOSTS}
+        return {"sessions": api.SESSIONS, "hosts": api.HOSTS, "regions": api.REGIONS}
 
     """Server list handler"""
 
@@ -31,3 +31,5 @@ class Handler(AdminHandler):
             del api.SESSIONS[secret]
         if secret in api.HOSTS:
             del api.HOSTS[secret]
+        if secret in api.HOSTS:
+            del api.REGIONS[secret]

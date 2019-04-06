@@ -40,6 +40,9 @@
         {{ escape(sessions[session]['version']) }}
       </td>
       <td>
+        {% if regions[session] %}
+        <span class="flag-icon flag-icon-{{ escape(regions[session]) }}"></span>
+        {% end %}
         {{ escape(hosts[session]) }}
       </td>
       <td>

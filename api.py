@@ -4,13 +4,14 @@ import re
 import time
 
 from tornado.web import RequestHandler
-from util import check_origin, generate_secret, get_ip
+from util import check_origin, generate_secret, get_ip, get_ip_region
 
 import database
 import settings
 
 SESSIONS = {}
 HOSTS = {}
+REGIONS = {}
 
 LAST_SESSION_CLEANUP = 0
 
@@ -23,6 +24,7 @@ def _cleanup_sessions():
     for key in to_delete:
         del SESSIONS[key]
         del HOSTS[key]
+        del REGIONS[key]
 
 def _filter_string(sessions, key, value, match=False):
     filtered_sessions = []
@@ -115,6 +117,8 @@ class Handler(RequestHandler):
         SESSIONS[secret] = session
 
         HOSTS[secret] = get_ip(self)
+
+        REGIONS[secret] = get_ip_region(HOSTS[secret])
 
         self.write({"status": "OK", "secret": secret})
 

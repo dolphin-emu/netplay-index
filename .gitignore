@@ -1,4 +1,6 @@
 *~
 *.pyc
 *.db
+*.mmdb
 __pycache__
+.DS_Store
