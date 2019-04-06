@@ -22,7 +22,7 @@ def _cleanup_sessions():
 
     for key in to_delete:
         del SESSIONS[key]
-
+        del HOSTS[key]
 
 def _filter_string(sessions, key, value, match=False):
     filtered_sessions = []
