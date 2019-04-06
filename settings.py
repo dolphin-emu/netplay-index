@@ -9,7 +9,7 @@ SESSION_CLEANUP_DELAY = 30
 SESSION_TIMEOUT_SECONDS = 15
 
 # Valid regions for sessions
-VALID_REGIONS = ["AF", "CN", "EA", "EU", "NA", "OC"]
+VALID_REGIONS = ["AF", "CN", "EA", "EU", "NA", "OC", "SA"]
 
 # The maximum size transmitted string fields are allowed to have
 SESSION_MAX_STRING_LENGTH = 64
