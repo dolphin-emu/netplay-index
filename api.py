@@ -127,6 +127,7 @@ class Handler(RequestHandler):
         secret = self.get_argument("secret", default=None, strip=True)
         game = self.get_argument("game", default=None, strip=True)
         in_game = self.get_argument("in_game", default=None, strip=True)
+        player_count = self.get_argument("player_count", default=None, strip=True)
 
         if secret not in SESSIONS:
             self.write({"status": "BAD_SESSION"})
@@ -146,6 +147,14 @@ class Handler(RequestHandler):
             except ValueError:
                 self.write({"status": "PARSING_ERROR"})
                 return
+
+        if player_count is not None:
+            try:
+                SESSIONS[secret]["player_count"] = int(player_count)
+            except ValueError:
+                self.write({"status": "PARSING_ERROR"})
+                return
+
 
         self.write({"status": "OK"})
 
