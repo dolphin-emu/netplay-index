@@ -3,6 +3,10 @@
 {% block content %}
   <h3>Welcome, {{ username }}!</h3>
 
+  <p>
+    There {% if session_count == 1 %}is{% else %}are{% end %} currently <i>{{ session_count }}</i> active session{% if session_count != 1 %}s{% end %} with <i>{{ total_player_count }}</i> active player{% if total_player_count != 1 %}s{% end %}.
+  </p>
+
   Actions:
   <ul>
     <li>
