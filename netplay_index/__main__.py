@@ -28,6 +28,10 @@ class MainHandler(RequestHandler):
 
 def make_app():
     """Return new app"""
+
+    if not database.initialize():
+        return None
+
     return tornado.web.Application(
         [
             (r"/", MainHandler),
@@ -48,7 +52,10 @@ def make_app():
 
 if __name__ == "__main__":
     parse_command_line()
-    if not database.initialize():
+
+    APP = make_app()
+
+    if APP is None:
         exit(1)
 
     if options.add_sysop is not None:
@@ -63,7 +70,6 @@ if __name__ == "__main__":
         print("New password for {}: {}".format(options.reset_pw, RANDOM_PW))
         exit(0)
 
-    APP = make_app()
     APP.listen(options.port)
     print("Listening on port {}...".format(options.port))
     tornado.ioloop.IOLoop.current().start()
