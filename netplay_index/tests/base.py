@@ -17,11 +17,20 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
         settings.LOGIN_ATTEMPT_DELAY = 0
         return netplay_index.make_app()
 
-    async def login(self):
-        if database.login_exists("test_user"):
-            database.delete_login("test_user")
+    async def login(self, bad_login=False, bad_pw=False):
+        username = "test_user"
+        password = "abc"
 
-        database.add_login("test_user", "abc")
+        if database.login_exists(username):
+            database.delete_login(username)
+
+        database.add_login(username, password)
+
+        if bad_pw:
+            password = "def"
+
+        if bad_login:
+            username = "test_user2"
 
         get = await self.http_client.fetch(self.get_url("/login"))
         self.assertEqual(get.code, 200)
@@ -36,8 +45,15 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
                 method="POST",
                 follow_redirects=False,
                 headers={"Cookie": "_xsrf={}".format(xsrf)},
-                body="_xsrf={}&username=test_user&password=abc".format(xsrf),
+                body="_xsrf={}&username={}&password={}".format(
+                    xsrf, username, password
+                ),
             )
         except tornado.httpclient.HTTPClientError as e:
             self.assertEqual(e.code, 302)
             return e.response.headers["Set-Cookie"]
+
+        if bad_pw or bad_login:
+            self.assertEqual(response.code, 200)
+        else:
+            self.assertEqual(response, None)
