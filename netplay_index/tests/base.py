@@ -24,7 +24,7 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
         if database.login_exists(username):
             database.delete_login(username)
 
-        database.add_login(username, password)
+        database.add_login(username, password, sysop=True)
 
         if bad_pw:
             password = "def"
