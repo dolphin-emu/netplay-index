@@ -1,6 +1,6 @@
 # NetPlay Index
+[![Build Status](https://travis-ci.org/dolphin-emu/netplay-index.svg?branch=master)](https://travis-ci.org/dolphin-emu/netplay-index)
 <a href="https://github.com/ambv/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
-  
 
 A NetPlay Index server for Dolphin.
 
