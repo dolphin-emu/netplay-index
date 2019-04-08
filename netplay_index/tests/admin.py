@@ -2,7 +2,6 @@
 
 import tornado.util
 from tornado.testing import gen_test
-from bs4 import BeautifulSoup
 
 from netplay_index.tests.base import NetPlayIndexTest
 
@@ -19,39 +18,8 @@ class LoginTest(NetPlayIndexTest):
 
     @gen_test
     def test_post(self):
-        if database.login_exists("test_user"):
-            database.delete_login("test_user")
-
-        database.add_login("test_user", "abc")
-
-        get = yield self.http_client.fetch(self.get_url("/login"))
-        self.assertEqual(get.code, 200)
-
-        soup = BeautifulSoup(get.body, "html.parser")
-        xsrf = soup.find(attrs={"name": "_xsrf"})["value"]
-
-        response = None
-        try:
-            response = yield self.http_client.fetch(
-                self.get_url("/login"),
-                method="POST",
-                follow_redirects=False,
-                headers={"Cookie": "_xsrf={}".format(xsrf)},
-                body="_xsrf={}&username=test_user&password=abc".format(xsrf),
-            )
-        except tornado.httpclient.HTTPClientError as e:
-            self.assertEqual(e.code, 302)
-
+        yield self.login()
         database.delete_login("test_user")
-
-        # If there was no redirect, the login attempt has failed
-        self.assertEqual(response, None)
-
-
-# The following tests are aboslute messes
-# TODO: Separate them into individual files
-# TODO: Deduplicate the login code
-# TODO: Deduplicate the database handling
 
 
 class AdminOverviewTest(NetPlayIndexTest):
@@ -59,37 +27,7 @@ class AdminOverviewTest(NetPlayIndexTest):
 
     @gen_test
     def test_get(self):
-
-        ### This block is copied and pasted from LoginTest as there are some issues with wrapping it into a function
-        ### BEGIN LoginTest
-        if database.login_exists("test_user"):
-            database.delete_login("test_user")
-
-        database.add_login("test_user", "abc")
-
-        get = yield self.http_client.fetch(self.get_url("/login"))
-        self.assertEqual(get.code, 200)
-
-        soup = BeautifulSoup(get.body, "html.parser")
-        xsrf = soup.find(attrs={"name": "_xsrf"})["value"]
-
-        response = None
-        cookie = None
-        try:
-            response = yield self.http_client.fetch(
-                self.get_url("/login"),
-                method="POST",
-                follow_redirects=False,
-                headers={"Cookie": "_xsrf={}".format(xsrf)},
-                body="_xsrf={}&username=test_user&password=abc".format(xsrf),
-            )
-        except tornado.httpclient.HTTPClientError as e:
-            self.assertEqual(e.code, 302)
-            cookie = e.response.headers["Set-Cookie"]
-
-        # If there was no redirect, the login attempt has failed
-        self.assertEqual(response, None)
-        ### END LoginTest
+        cookie = yield self.login()
 
         response = yield self.http_client.fetch(
             self.get_url("/admin/overview"),
@@ -107,36 +45,7 @@ class AdminServerListTest(NetPlayIndexTest):
     @gen_test
     def test_get(self):
 
-        ### This block is copied and pasted from LoginTest as there are some issues with wrapping it into a function
-        ### BEGIN LoginTest
-        if database.login_exists("test_user"):
-            database.delete_login("test_user")
-
-        database.add_login("test_user", "abc")
-
-        get = yield self.http_client.fetch(self.get_url("/login"))
-        self.assertEqual(get.code, 200)
-
-        soup = BeautifulSoup(get.body, "html.parser")
-        xsrf = soup.find(attrs={"name": "_xsrf"})["value"]
-
-        response = None
-        cookie = None
-        try:
-            response = yield self.http_client.fetch(
-                self.get_url("/login"),
-                method="POST",
-                follow_redirects=False,
-                headers={"Cookie": "_xsrf={}".format(xsrf)},
-                body="_xsrf={}&username=test_user&password=abc".format(xsrf),
-            )
-        except tornado.httpclient.HTTPClientError as e:
-            self.assertEqual(e.code, 302)
-            cookie = e.response.headers["Set-Cookie"]
-
-        # If there was no redirect, the login attempt has failed
-        self.assertEqual(response, None)
-        ### END LoginTest
+        cookie = yield self.login()
 
         response = yield self.http_client.fetch(
             self.get_url("/admin/server_list"),
@@ -153,84 +62,7 @@ class AdminUserManagementTest(NetPlayIndexTest):
 
     @gen_test
     def test_get(self):
-
-        ### This block is copied and pasted from LoginTest as there are some issues with wrapping it into a function
-        ### BEGIN LoginTest
-        if database.login_exists("test_user"):
-            database.delete_login("test_user")
-
-        database.add_login("test_user", "abc")
-
-        get = yield self.http_client.fetch(self.get_url("/login"))
-        self.assertEqual(get.code, 200)
-
-        soup = BeautifulSoup(get.body, "html.parser")
-        xsrf = soup.find(attrs={"name": "_xsrf"})["value"]
-
-        response = None
-        cookie = None
-        try:
-            response = yield self.http_client.fetch(
-                self.get_url("/login"),
-                method="POST",
-                follow_redirects=False,
-                headers={"Cookie": "_xsrf={}".format(xsrf)},
-                body="_xsrf={}&username=test_user&password=abc".format(xsrf),
-            )
-        except tornado.httpclient.HTTPClientError as e:
-            self.assertEqual(e.code, 302)
-            cookie = e.response.headers["Set-Cookie"]
-
-        # If there was no redirect, the login attempt has failed
-        self.assertEqual(response, None)
-        ### END LoginTest
-
-        response = yield self.http_client.fetch(
-            self.get_url("/admin/user_management"),
-            headers={"Cookie": cookie},
-            follow_redirects=False,
-        )
-        self.assertEqual(response.code, 200)
-
-        database.delete_login("test_user")
-
-
-class AdminBlacklistTest(NetPlayIndexTest):
-    """Test for /admin/blacklist"""
-
-    @gen_test
-    def test_get(self):
-
-        ### This block is copied and pasted from LoginTest as there are some issues with wrapping it into a function
-        ### BEGIN LoginTest
-        if database.login_exists("test_user"):
-            database.delete_login("test_user")
-
-        database.add_login("test_user", "abc")
-
-        get = yield self.http_client.fetch(self.get_url("/login"))
-        self.assertEqual(get.code, 200)
-
-        soup = BeautifulSoup(get.body, "html.parser")
-        xsrf = soup.find(attrs={"name": "_xsrf"})["value"]
-
-        response = None
-        cookie = None
-        try:
-            response = yield self.http_client.fetch(
-                self.get_url("/login"),
-                method="POST",
-                follow_redirects=False,
-                headers={"Cookie": "_xsrf={}".format(xsrf)},
-                body="_xsrf={}&username=test_user&password=abc".format(xsrf),
-            )
-        except tornado.httpclient.HTTPClientError as e:
-            self.assertEqual(e.code, 302)
-            cookie = e.response.headers["Set-Cookie"]
-
-        # If there was no redirect, the login attempt has failed
-        self.assertEqual(response, None)
-        ### END LoginTest
+        cookie = yield self.login()
 
         response = yield self.http_client.fetch(
             self.get_url("/admin/blacklist"),
@@ -247,37 +79,7 @@ class AdminBansTest(NetPlayIndexTest):
 
     @gen_test
     def test_get(self):
-
-        ### This block is copied and pasted from LoginTest as there are some issues with wrapping it into a function
-        ### BEGIN LoginTest
-        if database.login_exists("test_user"):
-            database.delete_login("test_user")
-
-        database.add_login("test_user", "abc")
-
-        get = yield self.http_client.fetch(self.get_url("/login"))
-        self.assertEqual(get.code, 200)
-
-        soup = BeautifulSoup(get.body, "html.parser")
-        xsrf = soup.find(attrs={"name": "_xsrf"})["value"]
-
-        response = None
-        cookie = None
-        try:
-            response = yield self.http_client.fetch(
-                self.get_url("/login"),
-                method="POST",
-                follow_redirects=False,
-                headers={"Cookie": "_xsrf={}".format(xsrf)},
-                body="_xsrf={}&username=test_user&password=abc".format(xsrf),
-            )
-        except tornado.httpclient.HTTPClientError as e:
-            self.assertEqual(e.code, 302)
-            cookie = e.response.headers["Set-Cookie"]
-
-        # If there was no redirect, the login attempt has failed
-        self.assertEqual(response, None)
-        ### END LoginTest
+        cookie = yield self.login()
 
         response = yield self.http_client.fetch(
             self.get_url("/admin/bans"),
