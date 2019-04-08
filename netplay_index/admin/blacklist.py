@@ -33,6 +33,11 @@ class Handler(AdminHandler):
                 self.set_error("Missing parameters")
                 return
 
+            for entry in database.blacklist_get():
+                if entry[0] == word:
+                    self.set_error("Word is already blacklisted")
+                    return
+
             database.blacklist_add(word, user, reason)
             return
 

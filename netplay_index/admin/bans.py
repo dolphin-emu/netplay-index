@@ -32,6 +32,11 @@ class Handler(AdminHandler):
                 self.set_error("Missing parameters")
                 return
 
+            for entry in database.bans_get():
+                if entry[0] == host:
+                    self.set_error("Host is already banned")
+                    return
+
             database.ban_add(host, user, reason)
             return
 
