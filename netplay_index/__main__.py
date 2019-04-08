@@ -7,15 +7,11 @@ import tornado.ioloop
 from tornado.options import define, options, parse_command_line
 from tornado.web import RequestHandler
 
-import api
-import login.login
-import database
-import util
-import admin.user_management
-import admin.server_list
-import admin.overview
-import admin.blacklist
-import admin.bans
+import netplay_index.api as api
+import netplay_index.login as login
+import netplay_index.database as database
+import netplay_index.util as util
+import netplay_index.admin as admin
 
 define("port", default=8000, help="Port to listen on", type=int)
 define("add_sysop", default=None, help="Add a new sysop via the command line")

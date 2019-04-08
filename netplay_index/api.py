@@ -4,10 +4,10 @@ import re
 import time
 
 from tornado.web import RequestHandler
-from util import check_origin, generate_secret, get_ip, get_ip_region
 
-import database
-import settings
+from netplay_index.util import check_origin, generate_secret, get_ip, get_ip_region
+import netplay_index.database as database
+import netplay_index.settings as settings
 
 SESSIONS = {}
 HOSTS = {}

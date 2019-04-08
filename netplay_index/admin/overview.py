@@ -1,8 +1,7 @@
 """Overview page, just showing a list of other pages at the moment"""
 
-from admin.base import AdminHandler
-
-import api
+from netplay_index.admin.base import AdminHandler
+import netplay_index.api as api
 
 # pylint: disable=W0223
 class Handler(AdminHandler):

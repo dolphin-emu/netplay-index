@@ -1,3 +1,0 @@
-"""Initialize module"""
-
-name = "admin"

@@ -2,7 +2,8 @@
 
 import geoip2.database
 import random
-import settings
+
+import netplay_index.settings as settings
 
 SECRET_KEY_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 SECRET_KEY_LENGTH = 10

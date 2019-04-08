@@ -1,8 +1,7 @@
 """List of servers"""
 
-import api
-
-from admin.base import AdminHandler
+from netplay_index.admin.base import AdminHandler
+import netplay_index.api as api
 
 # pylint: disable=W0223
 class Handler(AdminHandler):

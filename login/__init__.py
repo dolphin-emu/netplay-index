@@ -1,3 +1,0 @@
-"""Initialize package"""
-
-name = "login"

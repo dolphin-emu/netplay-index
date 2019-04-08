@@ -4,7 +4,7 @@ from abc import abstractmethod
 
 from tornado.web import RequestHandler
 
-import database
+import netplay_index.database as database
 
 # pylint: disable=W0223
 class AdminHandler(RequestHandler):
