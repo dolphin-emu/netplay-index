@@ -22,16 +22,21 @@ A NetPlay Index server for Dolphin.
 # Install dependencies
 pip3 install -r requirements.txt
 
+# Run tests (Optional)
+python3 -m netplay_index.tests.runtests
+
 # Creates a sysop account and gives you a randomly generated password (can be changed later)
-python3 main.py --add_sysop=SYSOP_NAME
+python3 -m netplay_index --add_sysop=SYSOP_NAME
 
 # Run the server
-python3 main.py
+python3 -m netplay_index
 ```
 
 ## Contributing
 
 All PRs must be formatted using [Black](https://github.com/ambv/black) before submission.
+
+Also make sure to run the test suite before creating your pull request.
 
 ## License
 
