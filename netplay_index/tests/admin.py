@@ -114,6 +114,57 @@ class AdminUserManagementTest(NetPlayIndexTest):
 
         database.delete_login("test_user")
 
+    @gen_test
+    def test_post(self):
+        login_cookie = yield self.login()
+
+        get = yield self.http_client.fetch(
+            self.get_url("/admin/blacklist"),
+            headers={"Cookie": login_cookie},
+            follow_redirects=False,
+        )
+        self.assertEqual(get.code, 200)
+
+        soup = BeautifulSoup(get.body, "html.parser")
+        xsrf = (
+            soup.find(name="input", attrs={"name": "action", "value": "blacklist_add"})
+            .find_parent("form")
+            .find(attrs={"name": "_xsrf"})["value"]
+        )
+
+        cookie = login_cookie + ";" + get.headers["Set-Cookie"]
+
+        post = yield self.http_client.fetch(
+            self.get_url("/admin/blacklist"),
+            headers={"Cookie": cookie},
+            method="POST",
+            body="_xsrf={}&action=blacklist_add&word=test&reason=test".format(xsrf),
+            follow_redirects=False,
+        )
+        self.assertEqual(post.code, 200)
+
+        soup = BeautifulSoup(post.body, "html.parser")
+        xsrf = (
+            soup.find(
+                name="input", attrs={"name": "action", "value": "blacklist_remove"}
+            )
+            .find_parent("form")
+            .find(attrs={"name": "_xsrf"})["value"]
+        )
+
+        cookie = login_cookie + ";" + get.headers["Set-Cookie"]
+
+        post = yield self.http_client.fetch(
+            self.get_url("/admin/blacklist"),
+            headers={"Cookie": cookie},
+            method="POST",
+            body="_xsrf={}&action=blacklist_remove&word=test".format(xsrf),
+            follow_redirects=False,
+        )
+        self.assertEqual(post.code, 200)
+
+        database.delete_login("test_user")
+
 
 class AdminBansTest(NetPlayIndexTest):
     """Test for /admin/bans"""
@@ -160,8 +211,6 @@ class AdminBansTest(NetPlayIndexTest):
         )
         self.assertEqual(post.code, 200)
 
-        print(post.body)
-
         soup = BeautifulSoup(post.body, "html.parser")
         xsrf = (
             soup.find(name="input", attrs={"name": "action", "value": "ban_remove"})
@@ -179,6 +228,5 @@ class AdminBansTest(NetPlayIndexTest):
             follow_redirects=False,
         )
         self.assertEqual(post.code, 200)
-        print(post.body)
 
         database.delete_login("test_user")
