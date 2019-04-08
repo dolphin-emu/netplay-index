@@ -4,4 +4,7 @@
 *.mmdb
 __pycache__
 .DS_Store
+
+# Coverage files
 .coverage
+*,cover
