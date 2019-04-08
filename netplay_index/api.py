@@ -78,24 +78,15 @@ class Handler(RequestHandler):
             if new_session[key] is None:
                 self.write({"status": "MISSING_PARAMETER", "parameter": key})
                 return
+            if not 0 < len(new_session[key]) < settings.SESSION_MAX_STRING_LENGTH:
+                self.write({"status": "BAD_PARAMETER_LENGTH", "parameter": key})
+                return
             if database.is_string_blacklisted(new_session[key]):
                 self.write({"status": "BLACKLISTED_WORD", "parameter": key})
                 return
 
         if new_session["region"] not in settings.VALID_REGIONS:
             self.write({"status": "BAD_REGION"})
-            return
-
-        if not 0 < len(new_session["name"]) < settings.SESSION_MAX_STRING_LENGTH:
-            self.write({"status": "BAD_NAME_LENGTH"})
-            return
-
-        if not 0 < len(new_session["game"]) < settings.SESSION_MAX_STRING_LENGTH:
-            self.write({"status": "BAD_GAME_LENGTH"})
-            return
-
-        if not 0 < len(new_session["server_id"]) < settings.SESSION_MAX_STRING_LENGTH:
-            self.write({"status": "BAD_SERVER_ID_LENGTH"})
             return
 
         if not 0 < int(new_session["port"]) <= 65535:
