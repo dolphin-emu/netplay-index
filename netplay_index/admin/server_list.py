@@ -1,13 +1,17 @@
 """List of servers"""
 
 from netplay_index.admin.base import AdminHandler
-import netplay_index.api as api
+import netplay_index.sessions as sessions
 
 # pylint: disable=W0223
 class Handler(AdminHandler):
     def template_args(self):
         """Return additional template args"""
-        return {"sessions": api.SESSIONS, "hosts": api.HOSTS, "regions": api.REGIONS}
+        return {
+            "sessions": sessions.get_all(),
+            "hosts": sessions.hosts(),
+            "regions": sessions.regions(),
+        }
 
     """Server list handler"""
 
@@ -26,9 +30,5 @@ class Handler(AdminHandler):
             self.set_error("Missing parameters")
             return
 
-        if secret in api.SESSIONS:
-            del api.SESSIONS[secret]
-        if secret in api.HOSTS:
-            del api.HOSTS[secret]
-        if secret in api.HOSTS:
-            del api.REGIONS[secret]
+        if secret in sessions.get_all():
+            sessions.remove_entry(secret)

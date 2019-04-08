@@ -2,10 +2,15 @@ import unittest
 
 import tornado.testing
 
-import netplay_index.tests.redirect as redirect
+import netplay_index.tests.api as admin
 import netplay_index.tests.api as api
+import netplay_index.tests.redirect as redirect
 
-TEST_MODULES = ["netplay_index.tests.redirect", "netplay_index.tests.api"]
+TEST_MODULES = [
+    "netplay_index.tests.admin",
+    "netplay_index.tests.api",
+    "netplay_index.tests.redirect",
+]
 
 
 def all():

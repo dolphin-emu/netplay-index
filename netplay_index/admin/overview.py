@@ -1,7 +1,7 @@
 """Overview page, just showing a list of other pages at the moment"""
 
 from netplay_index.admin.base import AdminHandler
-import netplay_index.api as api
+import netplay_index.sessions as sessions
 
 # pylint: disable=W0223
 class Handler(AdminHandler):
@@ -12,11 +12,11 @@ class Handler(AdminHandler):
 
         total_player_count = 0
 
-        for secret in api.SESSIONS:
-            total_player_count += api.SESSIONS[secret]["player_count"]
+        for secret in sessions.get_all():
+            total_player_count += sessions.get_entry(secret)["player_count"]
 
         return {
-            "session_count": len(api.SESSIONS),
+            "session_count": sessions.count(),
             "total_player_count": total_player_count,
         }
 
