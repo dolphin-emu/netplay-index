@@ -4,6 +4,7 @@ from netplay_index.tests.base import NetPlayIndexTest
 import tornado.util
 from tornado.testing import gen_test
 
+
 class RedirectTest(NetPlayIndexTest):
     @gen_test
     def runTest(self):

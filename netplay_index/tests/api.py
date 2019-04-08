@@ -6,6 +6,7 @@ from netplay_index.tests.base import NetPlayIndexTest
 import tornado.util
 from tornado.testing import gen_test
 
+
 class ListTest(NetPlayIndexTest):
     @gen_test
     def runTest(self):
@@ -16,8 +17,8 @@ class ListTest(NetPlayIndexTest):
 
         self.assertEqual(body["status"], "OK")
 
-class SessionAddTest(NetPlayIndexTest):
 
+class SessionAddTest(NetPlayIndexTest):
     @gen_test
     def bad_request(self):
         response = yield self.http_client.fetch(self.get_url("/v0/session/add"))
@@ -29,6 +30,7 @@ class SessionAddTest(NetPlayIndexTest):
 
     def runTest(self):
         self.bad_request()
+
 
 class SessionActiveTest(NetPlayIndexTest):
     @gen_test
@@ -43,8 +45,8 @@ class SessionActiveTest(NetPlayIndexTest):
     def runTest(self):
         self.bad_request()
 
-class SessionRemoveTest(NetPlayIndexTest):
 
+class SessionRemoveTest(NetPlayIndexTest):
     @gen_test
     def bad_request(self):
         response = yield self.http_client.fetch(self.get_url("/v0/session/remove"))

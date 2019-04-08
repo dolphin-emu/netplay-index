@@ -7,6 +7,7 @@ import re
 CONNECTION = None
 DB_REVISION = 0
 
+
 def _get_cursor():
     """Returns a connection cursor"""
     return CONNECTION.cursor()

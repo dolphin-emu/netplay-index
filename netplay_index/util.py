@@ -8,12 +8,14 @@ import netplay_index.settings as settings
 SECRET_KEY_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 SECRET_KEY_LENGTH = 10
 
+
 def get_ip_region(ip):
     reader = geoip2.database.Reader(settings.GEOIP_DATABASE_PATH)
     try:
         return reader.country(ip).country.iso_code.lower()
     except geoip2.errors.AddressNotFoundError:
         return None
+
 
 def generate_secret():
     """Generate secret string from a pool of characters"""

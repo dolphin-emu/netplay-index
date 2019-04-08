@@ -42,7 +42,7 @@ class AdminHandler(RequestHandler):
             "view": self.view(),
             "error": self.error,
             "sysop": database.is_sysop(self.get_username()),
-            "ajax": ajax
+            "ajax": ajax,
         }
 
         template_args.update(self.template_args())
@@ -66,7 +66,7 @@ class AdminHandler(RequestHandler):
         if not self.get_secure_cookie("logged_in"):
 
             if self.get_argument("ajax", default=False):
-                self.write('ERROR')
+                self.write("ERROR")
                 return
 
             self.redirect("/login?view=" + self.view())

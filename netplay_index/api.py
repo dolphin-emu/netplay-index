@@ -15,6 +15,7 @@ REGIONS = {}
 
 LAST_SESSION_CLEANUP = 0
 
+
 def _cleanup_sessions():
     to_delete = []
     for key in SESSIONS:
@@ -26,12 +27,15 @@ def _cleanup_sessions():
         del HOSTS[key]
         del REGIONS[key]
 
+
 def _filter_string(sessions, key, value, match=False):
     filtered_sessions = []
 
     for session in sessions:
         if match:
-            if re.match(".*" + re.escape(value) + ".*", str(session[key]), re.IGNORECASE):
+            if re.match(
+                ".*" + re.escape(value) + ".*", str(session[key]), re.IGNORECASE
+            ):
                 filtered_sessions.append(session)
         else:
             if session[key] == value:
@@ -51,7 +55,10 @@ class Handler(RequestHandler):
             self.write({"status": "BAD_ORIGIN"})
             return
 
-        if list(HOSTS.values()).count(get_ip(self)) > settings.MAXIMUM_SESSIONS_PER_HOST:
+        if (
+            list(HOSTS.values()).count(get_ip(self))
+            > settings.MAXIMUM_SESSIONS_PER_HOST
+        ):
             self.write({"status": "TOO_MANY_SESSIONS"})
             return
 
@@ -154,7 +161,6 @@ class Handler(RequestHandler):
             except ValueError:
                 self.write({"status": "PARSING_ERROR"})
                 return
-
 
         self.write({"status": "OK"})
 

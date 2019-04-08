@@ -13,11 +13,11 @@ class Handler(AdminHandler):
         total_player_count = 0
 
         for secret in api.SESSIONS:
-            total_player_count += api.SESSIONS[secret]['player_count']
+            total_player_count += api.SESSIONS[secret]["player_count"]
 
         return {
             "session_count": len(api.SESSIONS),
-            "total_player_count": total_player_count
+            "total_player_count": total_player_count,
         }
 
     def view(self):
