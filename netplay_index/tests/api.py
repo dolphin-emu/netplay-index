@@ -18,7 +18,6 @@ class ListTest(NetPlayIndexTest):
         body = json.loads(response.body)
 
         self.assertEqual(body["status"], "OK")
-        self.assertEqual(body["sessions"], [])
 
 
 class SessionAddTest(NetPlayIndexTest):

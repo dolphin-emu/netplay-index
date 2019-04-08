@@ -1,3 +1,5 @@
+import time
+
 from bs4 import BeautifulSoup
 
 import tornado.util
@@ -5,6 +7,7 @@ from tornado.testing import AsyncHTTPTestCase
 
 import netplay_index.__main__ as netplay_index
 import netplay_index.settings as settings
+import netplay_index.sessions as sessions
 
 import netplay_index.database as database
 
@@ -15,7 +18,33 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
     def get_app(self):
         # This greatly speeds up running tests
         settings.LOGIN_ATTEMPT_DELAY = 0
-        return netplay_index.make_app()
+        app = netplay_index.make_app()
+
+        # Many tests require a session to perform actions on
+        session = {
+            "name": "My Server",
+            "region": "EU",
+            "method": "direct",
+            "password": False,
+            "in_game": True,
+            "port": 2626,
+            "server_id": "test.id",
+            "player_count": 2,
+            "game": "Some Game",
+            "version": "5.0-666",
+        }
+
+        # Pretend that we are from the future so the test definitely has enough time to pass
+        session["timestamp"] = time.time() + 100
+
+        sessions.add_entry(session, "8.8.8.8")
+
+        # Pretend this session is old so the clean-up process is triggered
+        session["timestamp"] = time.time() - 100
+
+        sessions.add_entry(session, "8.8.8.8")
+
+        return app
 
     async def login(self, bad_login=False, bad_pw=False):
         username = "test_user"
