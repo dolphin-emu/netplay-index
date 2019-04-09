@@ -11,3 +11,4 @@ script:
   - coverage run -m netplay_index.tests.runtests
 after_success:
   - coveralls
+  - black --check
