@@ -136,7 +136,7 @@ def can_ban(username):
     return value[0]
 
 
-def can_modify_backlist(username):
+def can_modify_blacklist(username):
     """Checks whether a user can modify a blacklist"""
 
     if is_sysop(username):

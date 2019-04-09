@@ -10,6 +10,7 @@ TEST_MODULES = [
     "netplay_index.tests.admin",
     "netplay_index.tests.api",
     "netplay_index.tests.redirect",
+    "netplay_index.tests.database",
 ]
 
 

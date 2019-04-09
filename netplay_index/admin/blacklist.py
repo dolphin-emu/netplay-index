@@ -22,7 +22,7 @@ class Handler(AdminHandler):
         user = self.get_username()
 
         if action == "blacklist_add":
-            if not database.can_modify_backlist(user):
+            if not database.can_modify_blacklist(user):
                 self.set_error("Lacking permissions")
                 return
 
@@ -42,7 +42,7 @@ class Handler(AdminHandler):
             return
 
         if action == "blacklist_remove":
-            if not database.can_modify_backlist(user):
+            if not database.can_modify_blacklist(user):
                 self.set_error("Lacking permissions")
                 return
 
