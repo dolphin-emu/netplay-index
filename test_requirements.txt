@@ -1,0 +1,4 @@
+tornado-utils==1.6
+beautifulsoup4==4.6.0
+coveralls==1.7.0
+coverage==4.5.3

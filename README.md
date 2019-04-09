@@ -24,6 +24,7 @@ A NetPlay Index server for Dolphin.
 pip3 install -r requirements.txt
 
 # Run tests (Optional)
+pip3 install -r test_requirements.txt
 python3 -m netplay_index.tests.runtests
 
 # Creates a sysop account and gives you a randomly generated password (can be changed later)
@@ -35,9 +36,10 @@ python3 -m netplay_index
 
 ## Contributing
 
-All PRs must be formatted using [Black](https://github.com/ambv/black) before submission.
+All PRs must be formatted using [Black](https://github.com/ambv/black) before submission and pass the CI.
 
-Also make sure to run the test suite before creating your pull request.
+Also remember to write some tests if you add any new code.  
+coveralls.io will report how your PR affects the project coverage.
 
 ## License
 
