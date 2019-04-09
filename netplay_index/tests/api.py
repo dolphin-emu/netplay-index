@@ -56,7 +56,7 @@ class ListTest(NetPlayIndexTest):
     def test_valid_request(self):
         response = yield self.http_client.fetch(
             self.get_url(
-                "/v0/list?name=foo&region=EU&version=5.0-666&password=1&in_game=0&game=foo"
+                "/v0/list?name=server&region=EU&version=5.0-666&password=1&in_game=0&game=some"
             )
         )
         self.assertEqual(response.code, 200)
@@ -226,6 +226,24 @@ class SessionActiveTest(NetPlayIndexTest):
         body = json.loads(response.body)
         self.assertEqual(body["status"], "PARSE_ERROR")
 
+        # BLACKLISTED_WORD
+        for entry in database.blacklist_get():
+            if entry[0] == "nasty":
+                database.blacklist_remove("nasty")
+                break
+
+        database.blacklist_add("nasty", "test_user", "it's a bad word")
+
+        response = yield self.http_client.fetch(
+            self.get_url("/v0/session/active?secret=" + secret + "&game=a+nasty+name")
+        )
+        self.assertEqual(response.code, 200)
+
+        body = json.loads(response.body)
+        self.assertEqual(body["status"], "BLACKLISTED_WORD")
+
+        database.blacklist_remove("nasty")
+
     @gen_test
     def test_valid_request(self):
         """Valid request"""
@@ -234,7 +252,9 @@ class SessionActiveTest(NetPlayIndexTest):
 
         response = yield self.http_client.fetch(
             self.get_url(
-                "/v0/session/active?secret={}&player_count=10&in_game=1".format(secret)
+                "/v0/session/active?secret={}&player_count=10&game=foo&in_game=1".format(
+                    secret
+                )
             )
         )
         self.assertEqual(response.code, 200)
