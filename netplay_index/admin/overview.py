@@ -18,6 +18,8 @@ class Handler(AdminHandler):
         return {
             "session_count": sessions.count(),
             "total_player_count": total_player_count,
+            "total_session_count": sessions.total_session_count,
+            "start_time": sessions.start_time,
         }
 
     def view(self):

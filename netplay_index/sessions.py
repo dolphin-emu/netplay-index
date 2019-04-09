@@ -2,9 +2,15 @@
 
 from netplay_index.util import generate_secret, get_ip_region
 
+import time
+
 SESSIONS = {}
 HOSTS = {}
 REGIONS = {}
+
+
+start_time = time.asctime(time.localtime())
+total_session_count = 0
 
 
 def get_all():
@@ -22,10 +28,13 @@ def get_entry(secret):
 
 
 def add_entry(session, host):
+    global total_session_count
+
     secret = generate_secret()
     SESSIONS[secret] = session
     HOSTS[secret] = host
     REGIONS[secret] = get_ip_region(host)
+    total_session_count += 1
     return secret
 
 

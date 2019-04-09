@@ -4,7 +4,9 @@
   <h3>Welcome, {{ username }}!</h3>
 
   <p>
-    There {% if session_count == 1 %}is{% else %}are{% end %} currently <i>{{ session_count }}</i> active session{% if session_count != 1 %}s{% end %} with <i>{{ total_player_count }}</i> active player{% if total_player_count != 1 %}s{% end %}.
+    There {% if session_count == 1 %}is{% else %}are{% end %} currently <code>{{ session_count }}</code> active session{% if session_count != 1 %}s{% end %} with <code>{{ total_player_count }}</code> active player{% if total_player_count != 1 %}s{% end %}.
+
+    This index has been up since <code>{{ start_time }}</code> and has hosted <code>{{ total_session_count }}</code> session{% if total_session_count != 1 %}s{% end %} since.
   </p>
 
   Actions:
