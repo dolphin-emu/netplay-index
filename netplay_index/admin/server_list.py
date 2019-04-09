@@ -26,9 +26,5 @@ class Handler(AdminHandler):
         if action != "session_remove":
             return
 
-        if secret is None:
-            self.set_error("Missing parameters")
-            return
-
         if secret in sessions.get_all():
             sessions.remove_entry(secret)

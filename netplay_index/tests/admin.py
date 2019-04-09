@@ -8,6 +8,7 @@ from tornado.testing import gen_test
 from netplay_index.tests.base import NetPlayIndexTest
 
 import netplay_index.database as database
+import netplay_index.sessions as sessions
 
 
 def _get_xsrf(body, action):
@@ -107,6 +108,36 @@ class AdminServerListTest(NetPlayIndexTest):
 
         database.delete_login("test_user")
 
+    @gen_test
+    def test_post(self):
+        login_cookie = yield self.login()
+
+        get = yield self.http_client.fetch(
+            self.get_url("/admin/server_list"),
+            headers={"Cookie": login_cookie},
+            follow_redirects=False,
+        )
+
+        self.assertEqual(get.code, 200)
+
+        xsrf = _get_xsrf(get.body, "session_remove")
+
+        cookie = login_cookie + ";" + get.headers["Set-Cookie"]
+
+        secret = list(sessions.get_all().keys())[0]
+
+        post = yield self.http_client.fetch(
+            self.get_url("/admin/server_list"),
+            headers={"Cookie": cookie},
+            follow_redirects=False,
+            method="POST",
+            body="_xsrf={}&action=session_remove&secret={}".format(xsrf, secret),
+        )
+
+        self.assertEqual(post.code, 200)
+
+        database.delete_login("test_user")
+
 
 class AdminBlacklistTest(NetPlayIndexTest):
     """Test for /admin/blacklist"""
@@ -135,12 +166,7 @@ class AdminBlacklistTest(NetPlayIndexTest):
         )
         self.assertEqual(get.code, 200)
 
-        soup = BeautifulSoup(get.body, "html.parser")
-        xsrf = (
-            soup.find(name="input", attrs={"name": "action", "value": "blacklist_add"})
-            .find_parent("form")
-            .find(attrs={"name": "_xsrf"})["value"]
-        )
+        xsrf = _get_xsrf(get.body, "blacklist_add")
 
         cookie = login_cookie + ";" + get.headers["Set-Cookie"]
 
@@ -153,14 +179,7 @@ class AdminBlacklistTest(NetPlayIndexTest):
         )
         self.assertEqual(post.code, 200)
 
-        soup = BeautifulSoup(post.body, "html.parser")
-        xsrf = (
-            soup.find(
-                name="input", attrs={"name": "action", "value": "blacklist_remove"}
-            )
-            .find_parent("form")
-            .find(attrs={"name": "_xsrf"})["value"]
-        )
+        xsrf = _get_xsrf(post.body, "blacklist_remove")
 
         cookie = login_cookie + ";" + get.headers["Set-Cookie"]
 
