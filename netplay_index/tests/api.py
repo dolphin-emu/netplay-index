@@ -11,12 +11,52 @@ import netplay_index.settings as settings
 import netplay_index.database as database
 
 
-class ListTest(NetPlayIndexTest):
+class BadRequestTest(NetPlayIndexTest):
     @gen_test
-    def runTest(self):
+    def test_bad_version(self):
+        """Bad version"""
+        response = yield self.http_client.fetch(self.get_url("/v666/list"))
+        self.assertEqual(response.code, 200)
+        body = json.loads(response.body)
+
+        self.assertEqual(body["status"], "BAD_VERSION")
+
+    @gen_test
+    def test_bad_action(self):
+        """Bad action"""
+        response = yield self.http_client.fetch(self.get_url("/v0/not_a_real_action"))
+        self.assertEqual(response.code, 200)
+        body = json.loads(response.body)
+
+        self.assertEqual(body["status"], "BAD_ACTION")
+
+    @gen_test
+    def test_banned(self):
+        """Banned"""
+        for entry in database.bans_get():
+            if entry[0] == "3.3.3.3":
+                database.ban_remove("3.3.3.3")
+                break
+
+        database.ban_add("3.3.3.3", "test_user", "test")
+        response = yield self.http_client.fetch(
+            self.get_url("/v0/list"), headers={"X-Real-IP": "3.3.3.3"}
+        )
+        self.assertEqual(response.code, 200)
+        body = json.loads(response.body)
+
+        self.assertEqual(body["status"], "IP_BANNED")
+        database.ban_remove("3.3.3.3")
+
+
+class ListTest(NetPlayIndexTest):
+    """Tests for /list"""
+
+    @gen_test
+    def test_valid_request(self):
         response = yield self.http_client.fetch(
             self.get_url(
-                "/v0/list?name=foo&region=EU&version=5.0-666&password=1&in_game=0"
+                "/v0/list?name=foo&region=EU&version=5.0-666&password=1&in_game=0&game=foo"
             )
         )
         self.assertEqual(response.code, 200)
@@ -24,6 +64,19 @@ class ListTest(NetPlayIndexTest):
         body = json.loads(response.body)
 
         self.assertEqual(body["status"], "OK")
+
+    @gen_test
+    def test_bad_request(self):
+        response = yield self.http_client.fetch(
+            self.get_url(
+                "/v0/list?name=foo&region=EU&version=5.0-666&password=bad&in_game=bad&game=foo"
+            )
+        )
+        self.assertEqual(response.code, 200)
+
+        body = json.loads(response.body)
+
+        self.assertEqual(body["status"], "PARSE_ERROR")
 
 
 class SessionAddTest(NetPlayIndexTest):
@@ -74,12 +127,12 @@ class SessionAddTest(NetPlayIndexTest):
         body = json.loads(response.body)
         self.assertEqual(body["status"], "BAD_REGION")
 
-        # PARSING_ERROR
+        # PARSE_ERROR
         response = yield self.http_client.fetch(self.build_url(in_game="yes"))
         self.assertEqual(response.code, 200)
 
         body = json.loads(response.body)
-        self.assertEqual(body["status"], "PARSING_ERROR")
+        self.assertEqual(body["status"], "PARSE_ERROR")
 
         # BAD_PORT
         response = yield self.http_client.fetch(self.build_url(port="123456"))
@@ -155,14 +208,23 @@ class SessionActiveTest(NetPlayIndexTest):
     """Tests for session/active"""
 
     @gen_test
-    def test_bad_request(self):
-        """Bad request with missing parameters"""
+    def test_bad_requests(self):
+        """Bad requests"""
+
+        # BAD_SESSION
         response = yield self.http_client.fetch(self.get_url("/v0/session/active"))
         self.assertEqual(response.code, 200)
-
         body = json.loads(response.body)
-
         self.assertEqual(body["status"], "BAD_SESSION")
+
+        # PARSE_ERROR
+        secret = sessions.add_entry({}, "127.0.0.1")
+        response = yield self.http_client.fetch(
+            self.get_url("/v0/session/active?secret=" + secret + "&player_count=bad")
+        )
+        self.assertEqual(response.code, 200)
+        body = json.loads(response.body)
+        self.assertEqual(body["status"], "PARSE_ERROR")
 
     @gen_test
     def test_valid_request(self):

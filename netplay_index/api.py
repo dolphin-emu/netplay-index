@@ -48,10 +48,6 @@ class Handler(RequestHandler):
     def session_add(self):
         """Adds a new session"""
 
-        if not check_origin(self):
-            self.write({"status": "BAD_ORIGIN"})
-            return
-
         if (
             sessions.get_host_session_count(get_ip(self))
             >= settings.MAXIMUM_SESSIONS_PER_HOST
@@ -104,7 +100,7 @@ class Handler(RequestHandler):
             new_session["port"] = int(new_session["port"])
             new_session["player_count"] = int(new_session["player_count"])
         except ValueError:
-            self.write({"status": "PARSING_ERROR"})
+            self.write({"status": "PARSE_ERROR"})
             return
 
         ip = get_ip(self)
@@ -131,19 +127,14 @@ class Handler(RequestHandler):
                 return
             sessions.SESSIONS[secret]["game"] = game
 
-        if in_game is not None:
-            try:
+        try:
+            if in_game is not None:
                 sessions.SESSIONS[secret]["in_game"] = bool(int(in_game))
-            except ValueError:
-                self.write({"status": "PARSING_ERROR"})
-                return
-
-        if player_count is not None:
-            try:
+            if player_count is not None:
                 sessions.SESSIONS[secret]["player_count"] = int(player_count)
-            except ValueError:
-                self.write({"status": "PARSING_ERROR"})
-                return
+        except ValueError:
+            self.write({"status": "PARSE_ERROR"})
+            return
 
         self.write({"status": "OK"})
 
