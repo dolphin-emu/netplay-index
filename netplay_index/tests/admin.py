@@ -30,6 +30,17 @@ class LoginTest(NetPlayIndexTest):
         self.assertEqual(response.code, 200)
 
     @gen_test
+    def test_redirect(self):
+        cookie = yield self.login()
+
+        response = yield self.http_client.fetch(
+            self.get_url("/login?view=overview"), headers={"Cookie": cookie}
+        )
+        self.assertEqual(response.code, 200)
+
+        database.delete_login("test_user")
+
+    @gen_test
     def test_post(self):
         yield self.login()
 
