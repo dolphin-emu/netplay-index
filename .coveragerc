@@ -6,3 +6,4 @@ omit =
 exclude_lines =
     raise NotImplementedError
     if __name__ == "__main__":
+    if db_rev != DB_REVISION:
