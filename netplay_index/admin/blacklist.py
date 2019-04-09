@@ -21,11 +21,11 @@ class Handler(AdminHandler):
         action = self.get_argument("action", default=None)
         user = self.get_username()
 
-        if action == "blacklist_add":
-            if not database.can_modify_blacklist(user):
-                self.set_error("Lacking permissions")
-                return
+        if not database.can_modify_blacklist(user):
+            self.set_error("Lacking permissions")
+            return
 
+        if action == "blacklist_add":
             word = self.get_argument("word", default=None)
             reason = self.get_argument("reason", default=None)
 
@@ -42,10 +42,6 @@ class Handler(AdminHandler):
             return
 
         if action == "blacklist_remove":
-            if not database.can_modify_blacklist(user):
-                self.set_error("Lacking permissions")
-                return
-
             word = self.get_argument("word", default=None)
 
             if not word:
