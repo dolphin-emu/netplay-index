@@ -7,13 +7,18 @@ from tornado.testing import gen_test
 
 from netplay_index.tests.base import NetPlayIndexTest
 import netplay_index.sessions as sessions
+import netplay_index.settings as settings
 import netplay_index.database as database
 
 
 class ListTest(NetPlayIndexTest):
     @gen_test
     def runTest(self):
-        response = yield self.http_client.fetch(self.get_url("/v0/list"))
+        response = yield self.http_client.fetch(
+            self.get_url(
+                "/v0/list?name=foo&region=EU&version=5.0-666&password=1&in_game=0"
+            )
+        )
         self.assertEqual(response.code, 200)
 
         body = json.loads(response.body)
@@ -90,6 +95,24 @@ class SessionAddTest(NetPlayIndexTest):
         body = json.loads(response.body)
         self.assertEqual(body["status"], "BAD_METHOD")
 
+        # BAD_ORIGIN
+        response = yield self.http_client.fetch(
+            self.build_url(), headers={"Origin": "bad.origin"}
+        )
+        self.assertEqual(response.code, 200)
+
+        body = json.loads(response.body)
+        self.assertEqual(body["status"], "BAD_ORIGIN")
+
+        # BAD_PARAMETER_LENGTH
+        response = yield self.http_client.fetch(
+            self.build_url(name="A" * (settings.SESSION_MAX_STRING_LENGTH + 1))
+        )
+        self.assertEqual(response.code, 200)
+
+        body = json.loads(response.body)
+        self.assertEqual(body["status"], "BAD_PARAMETER_LENGTH")
+
         # BLACKLISTED_WORD
         for entry in database.blacklist_get():
             if entry[0] == "nasty":
@@ -107,13 +130,25 @@ class SessionAddTest(NetPlayIndexTest):
         database.blacklist_remove("nasty")
 
     @gen_test
-    def test_valid_request(self):
+    def test_max_sessions(self):
         """Valid request with all required parameters"""
-        response = yield self.http_client.fetch(self.build_url())
+
+        for _ in range(0, settings.MAXIMUM_SESSIONS_PER_HOST):
+            response = yield self.http_client.fetch(
+                self.build_url(), headers={"X-Real-IP": "1.1.1.1"}
+            )
+            self.assertEqual(response.code, 200)
+
+            body = json.loads(response.body)
+            self.assertEqual(body["status"], "OK")
+
+        response = yield self.http_client.fetch(
+            self.build_url(), headers={"X-Real-IP": "1.1.1.1"}
+        )
         self.assertEqual(response.code, 200)
 
         body = json.loads(response.body)
-        self.assertEqual(body["status"], "OK")
+        self.assertEqual(body["status"], "TOO_MANY_SESSIONS")
 
 
 class SessionActiveTest(NetPlayIndexTest):

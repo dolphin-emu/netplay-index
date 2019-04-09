@@ -56,7 +56,7 @@ class Handler(RequestHandler):
 
         if (
             sessions.get_host_session_count(get_ip(self))
-            > settings.MAXIMUM_SESSIONS_PER_HOST
+            >= settings.MAXIMUM_SESSIONS_PER_HOST
         ):
             self.write({"status": "TOO_MANY_SESSIONS"})
             return
