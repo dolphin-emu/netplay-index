@@ -85,6 +85,37 @@ class LogoutTest(NetPlayIndexTest):
         yield self.login(bad_login=True)
 
 
+class AdminBaseTest(NetPlayIndexTest):
+    """Test AdminHandler functionality"""
+
+    @gen_test
+    def test_get(self):
+        response = None
+        try:
+            response = yield self.http_client.fetch(
+                self.get_url("/admin/overview"), follow_redirects=False
+            )
+        except tornado.httpclient.HTTPClientError as e:
+            self.assertEqual(e.code, 302)
+
+        self.assertEqual(response, None)
+
+    @gen_test
+    def test_xsrf(self):
+        response = None
+        try:
+            response = yield self.http_client.fetch(
+                self.get_url("/admin/overview"),
+                follow_redirects=False,
+                method="POST",
+                body="",
+            )
+        except tornado.httpclient.HTTPClientError as e:
+            self.assertEqual(e.code, 403)
+
+        self.assertEqual(response, None)
+
+
 class AdminOverviewTest(NetPlayIndexTest):
     """Test for /admin/overview"""
 
