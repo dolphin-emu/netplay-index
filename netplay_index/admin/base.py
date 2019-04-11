@@ -47,6 +47,9 @@ class AdminHandler(RequestHandler):
 
         template_args.update(self.template_args())
 
+        if self.error is not "":
+            self.set_status(403)
+
         self.render("{}.html".format(self.view()), **template_args)
 
     def post(self):

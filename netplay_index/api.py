@@ -53,6 +53,7 @@ class Handler(RequestHandler):
             >= settings.MAXIMUM_SESSIONS_PER_HOST
         ):
             self.write({"status": "TOO_MANY_SESSIONS"})
+            self.set_status(429)
             return
 
         new_session = {}
@@ -71,24 +72,30 @@ class Handler(RequestHandler):
             new_session[key] = self.get_argument(key, default=None, strip=True)
             if new_session[key] is None:
                 self.write({"status": "MISSING_PARAMETER", "parameter": key})
+                self.set_status(400)
                 return
             if not 0 < len(new_session[key]) < settings.SESSION_MAX_STRING_LENGTH:
                 self.write({"status": "BAD_PARAMETER_LENGTH", "parameter": key})
+                self.set_status(400)
                 return
             if database.is_string_blacklisted(new_session[key]):
                 self.write({"status": "BLACKLISTED_WORD", "parameter": key})
+                self.set_status(400)
                 return
 
         if new_session["region"] not in settings.VALID_REGIONS:
             self.write({"status": "BAD_REGION"})
+            self.set_status(400)
             return
 
         if not 0 < int(new_session["port"]) <= 65535:
             self.write({"status": "BAD_PORT"})
+            self.set_status(400)
             return
 
         if new_session["method"] not in ["direct", "traversal"]:
             self.write({"status": "BAD_METHOD"})
+            self.set_status(400)
             return
 
         new_session["timestamp"] = time.time()
@@ -101,6 +108,7 @@ class Handler(RequestHandler):
             new_session["player_count"] = int(new_session["player_count"])
         except ValueError:
             self.write({"status": "PARSE_ERROR"})
+            self.set_status(400)
             return
 
         ip = get_ip(self)
@@ -117,6 +125,7 @@ class Handler(RequestHandler):
 
         if sessions.get_entry(secret) is None:
             self.write({"status": "BAD_SESSION"})
+            self.set_status(400)
             return
 
         sessions.SESSIONS[secret]["timestamp"] = time.time()
@@ -124,6 +133,7 @@ class Handler(RequestHandler):
         if game is not None:
             if database.is_string_blacklisted(game):
                 self.write({"status": "BLACKLISTED_WORD", "parameter": "game"})
+                self.set_status(400)
                 return
             sessions.SESSIONS[secret]["game"] = game
 
@@ -134,6 +144,7 @@ class Handler(RequestHandler):
                 sessions.SESSIONS[secret]["player_count"] = int(player_count)
         except ValueError:
             self.write({"status": "PARSE_ERROR"})
+            self.set_status(400)
             return
 
         self.write({"status": "OK"})
@@ -144,6 +155,7 @@ class Handler(RequestHandler):
 
         if sessions.get_entry(secret) is None:
             self.write({"status": "BAD_SESSION"})
+            self.set_status(400)
             return
 
         sessions.remove_entry(secret)
@@ -192,6 +204,7 @@ class Handler(RequestHandler):
                 )
         except ValueError:
             self.write({"status": "PARSE_ERROR"})
+            self.set_status(400)
             return
 
         self.write({"status": "OK", "sessions": filtered_sessions})
@@ -201,14 +214,17 @@ class Handler(RequestHandler):
         api_version = int(api_version)
         if api_version != 0:
             self.write({"status": "BAD_VERSION"})
+            self.set_status(400)
             return
 
         if not check_origin(self):
             self.write({"status": "BAD_ORIGIN"})
+            self.set_status(403)
             return
 
         if database.is_host_banned(get_ip(self)):
-            self.write({"status": "IP_BANNED"})
+            self.write({"status": "HOST_BANNED"})
+            self.set_status(403)
             return
 
         actions = {
@@ -220,6 +236,7 @@ class Handler(RequestHandler):
 
         if action not in actions:
             self.write({"status": "BAD_ACTION"})
+            self.set_status(404)
             return
 
         actions[action]()

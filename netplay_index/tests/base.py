@@ -1,3 +1,4 @@
+import json
 import time
 
 from bs4 import BeautifulSoup
@@ -46,6 +47,17 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
 
         return app
 
+    async def bad_request(self, expected_code, expected_status, http_args):
+        response = None
+        try:
+            response = await self.http_client.fetch(**http_args)
+        except tornado.httpclient.HTTPClientError as e:
+            self.assertEqual(e.code, expected_code)
+            body = json.loads(e.response.body)
+            self.assertEqual(body["status"], expected_status)
+
+        self.assertEqual(response, None)
+
     async def login(self, bad_login=False, bad_pw=False):
         username = "test_user"
         password = "abc"
@@ -79,10 +91,11 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
                 ),
             )
         except tornado.httpclient.HTTPClientError as e:
-            self.assertEqual(e.code, 302)
-            return e.response.headers["Set-Cookie"]
+            if bad_pw or bad_login:
+                self.assertEqual(e.code, 403)
+                return None
+            else:
+                self.assertEqual(e.code, 302)
+                return e.response.headers["Set-Cookie"]
 
-        if bad_pw or bad_login:
-            self.assertEqual(response.code, 200)
-        else:
-            self.assertEqual(response, None)
+        self.assertEqual(response, None)

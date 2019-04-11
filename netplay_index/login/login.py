@@ -44,4 +44,5 @@ class Login(RequestHandler):
             self.redirect("/admin/" + view)
             return
 
+        self.set_status(403)
         self.render("login.html", error="Login failed.", ajax=False)

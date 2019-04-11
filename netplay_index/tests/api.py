@@ -15,20 +15,18 @@ class BadRequestTest(NetPlayIndexTest):
     @gen_test
     def test_bad_version(self):
         """Bad version"""
-        response = yield self.http_client.fetch(self.get_url("/v666/list"))
-        self.assertEqual(response.code, 200)
-        body = json.loads(response.body)
 
-        self.assertEqual(body["status"], "BAD_VERSION")
+        yield self.bad_request(
+            400, "BAD_VERSION", {"request": self.get_url("/v666/list")}
+        )
 
     @gen_test
     def test_bad_action(self):
         """Bad action"""
-        response = yield self.http_client.fetch(self.get_url("/v0/not_a_real_action"))
-        self.assertEqual(response.code, 200)
-        body = json.loads(response.body)
 
-        self.assertEqual(body["status"], "BAD_ACTION")
+        yield self.bad_request(
+            404, "BAD_ACTION", {"request": self.get_url("/v0/not_a_real_action")}
+        )
 
     @gen_test
     def test_banned(self):
@@ -39,13 +37,13 @@ class BadRequestTest(NetPlayIndexTest):
                 break
 
         database.ban_add("3.3.3.3", "test_user", "test")
-        response = yield self.http_client.fetch(
-            self.get_url("/v0/list"), headers={"X-Real-IP": "3.3.3.3"}
-        )
-        self.assertEqual(response.code, 200)
-        body = json.loads(response.body)
 
-        self.assertEqual(body["status"], "IP_BANNED")
+        yield self.bad_request(
+            403,
+            "HOST_BANNED",
+            {"request": self.get_url("/v0/list"), "headers": {"X-Real-IP": "3.3.3.3"}},
+        )
+
         database.ban_remove("3.3.3.3")
 
 
@@ -67,16 +65,15 @@ class ListTest(NetPlayIndexTest):
 
     @gen_test
     def test_bad_request(self):
-        response = yield self.http_client.fetch(
-            self.get_url(
-                "/v0/list?name=foo&region=EU&version=5.0-666&password=bad&in_game=bad&game=foo"
-            )
+        yield self.bad_request(
+            400,
+            "PARSE_ERROR",
+            {
+                "request": self.get_url(
+                    "/v0/list?name=foo&region=EU&version=5.0-666&password=bad&in_game=bad&game=foo"
+                )
+            },
         )
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-
-        self.assertEqual(body["status"], "PARSE_ERROR")
 
 
 class SessionAddTest(NetPlayIndexTest):
@@ -114,57 +111,47 @@ class SessionAddTest(NetPlayIndexTest):
         """Bad requests"""
 
         # MISSING_PARAMETER
-        response = yield self.http_client.fetch(self.get_url("/v0/session/add"))
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "MISSING_PARAMETER")
+        yield self.bad_request(
+            400, "MISSING_PARAMETER", {"request": self.get_url("/v0/session/add")}
+        )
 
         # BAD_REGEION
-        response = yield self.http_client.fetch(self.build_url(region="??"))
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "BAD_REGION")
+        yield self.bad_request(
+            400, "BAD_REGION", {"request": self.build_url(region="??")}
+        )
 
         # PARSE_ERROR
-        response = yield self.http_client.fetch(self.build_url(in_game="yes"))
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "PARSE_ERROR")
+        yield self.bad_request(
+            400, "PARSE_ERROR", {"request": self.build_url(in_game="yes")}
+        )
 
         # BAD_PORT
-        response = yield self.http_client.fetch(self.build_url(port="123456"))
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "BAD_PORT")
+        yield self.bad_request(
+            400, "BAD_PORT", {"request": self.build_url(port="123456")}
+        )
 
         # BAD_METHOD
-        response = yield self.http_client.fetch(self.build_url(method="magic"))
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "BAD_METHOD")
+        yield self.bad_request(
+            400, "BAD_METHOD", {"request": self.build_url(method="magic")}
+        )
 
         # BAD_ORIGIN
-        response = yield self.http_client.fetch(
-            self.build_url(), headers={"Origin": "bad.origin"}
+        yield self.bad_request(
+            403,
+            "BAD_ORIGIN",
+            {"request": self.build_url(), "headers": {"Origin": "bad.origin"}},
         )
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "BAD_ORIGIN")
 
         # BAD_PARAMETER_LENGTH
-        response = yield self.http_client.fetch(
-            self.build_url(name="A" * (settings.SESSION_MAX_STRING_LENGTH + 1))
+        yield self.bad_request(
+            400,
+            "BAD_PARAMETER_LENGTH",
+            {
+                "request": self.build_url(
+                    name="A" * (settings.SESSION_MAX_STRING_LENGTH + 1)
+                )
+            },
         )
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "BAD_PARAMETER_LENGTH")
 
         # BLACKLISTED_WORD
         for entry in database.blacklist_get():
@@ -174,11 +161,9 @@ class SessionAddTest(NetPlayIndexTest):
 
         database.blacklist_add("nasty", "test_user", "it's a bad word")
 
-        response = yield self.http_client.fetch(self.build_url(name="a+nasty+name"))
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "BLACKLISTED_WORD")
+        yield self.bad_request(
+            400, "BLACKLISTED_WORD", {"request": self.build_url(name="a+nasty+name")}
+        )
 
         database.blacklist_remove("nasty")
 
@@ -195,13 +180,11 @@ class SessionAddTest(NetPlayIndexTest):
             body = json.loads(response.body)
             self.assertEqual(body["status"], "OK")
 
-        response = yield self.http_client.fetch(
-            self.build_url(), headers={"X-Real-IP": "1.1.1.1"}
+        yield self.bad_request(
+            429,
+            "TOO_MANY_SESSIONS",
+            {"request": self.build_url(), "headers": {"X-Real-IP": "1.1.1.1"}},
         )
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "TOO_MANY_SESSIONS")
 
 
 class SessionActiveTest(NetPlayIndexTest):
@@ -212,19 +195,22 @@ class SessionActiveTest(NetPlayIndexTest):
         """Bad requests"""
 
         # BAD_SESSION
-        response = yield self.http_client.fetch(self.get_url("/v0/session/active"))
-        self.assertEqual(response.code, 200)
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "BAD_SESSION")
+        yield self.bad_request(
+            400, "BAD_SESSION", {"request": self.get_url("/v0/session/active")}
+        )
 
         # PARSE_ERROR
         secret = sessions.add_entry({}, "127.0.0.1")
-        response = yield self.http_client.fetch(
-            self.get_url("/v0/session/active?secret=" + secret + "&player_count=bad")
+
+        yield self.bad_request(
+            400,
+            "PARSE_ERROR",
+            {
+                "request": self.get_url(
+                    "/v0/session/active?secret=" + secret + "&player_count=bad"
+                )
+            },
         )
-        self.assertEqual(response.code, 200)
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "PARSE_ERROR")
 
         # BLACKLISTED_WORD
         for entry in database.blacklist_get():
@@ -234,13 +220,15 @@ class SessionActiveTest(NetPlayIndexTest):
 
         database.blacklist_add("nasty", "test_user", "it's a bad word")
 
-        response = yield self.http_client.fetch(
-            self.get_url("/v0/session/active?secret=" + secret + "&game=a+nasty+name")
+        yield self.bad_request(
+            400,
+            "BLACKLISTED_WORD",
+            {
+                "request": self.get_url(
+                    "/v0/session/active?secret=" + secret + "&game=a+nasty+word"
+                )
+            },
         )
-        self.assertEqual(response.code, 200)
-
-        body = json.loads(response.body)
-        self.assertEqual(body["status"], "BLACKLISTED_WORD")
 
         database.blacklist_remove("nasty")
 
@@ -270,12 +258,10 @@ class SessionRemoveTest(NetPlayIndexTest):
     @gen_test
     def test_bad_request(self):
         """Bad request"""
-        response = yield self.http_client.fetch(self.get_url("/v0/session/remove"))
-        self.assertEqual(response.code, 200)
 
-        body = json.loads(response.body)
-
-        self.assertEqual(body["status"], "BAD_SESSION")
+        yield self.bad_request(
+            400, "BAD_SESSION", {"request": self.get_url("/v0/session/remove")}
+        )
 
     @gen_test
     def test_valid_request(self):
