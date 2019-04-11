@@ -89,7 +89,7 @@ class AdminBaseTest(NetPlayIndexTest):
     """Test AdminHandler functionality"""
 
     @gen_test
-    def test_get(self):
+    def test_get_redirect(self):
         response = None
         try:
             response = yield self.http_client.fetch(
@@ -99,6 +99,26 @@ class AdminBaseTest(NetPlayIndexTest):
             self.assertEqual(e.code, 302)
 
         self.assertEqual(response, None)
+
+    @gen_test
+    def test_ajax(self):
+        response = yield self.http_client.fetch(
+            self.get_url("/admin/overview?ajax=1"), follow_redirects=False
+        )
+
+        self.assertEqual(response.code, 200)
+        self.assertEqual(response.body, b"ERROR")
+
+        login_cookie = yield self.login()
+
+        response = yield self.http_client.fetch(
+            self.get_url("/admin/overview?ajax=1"),
+            headers={"Cookie": login_cookie},
+            follow_redirects=False,
+        )
+
+        self.assertEqual(response.code, 200)
+        self.assertNotEqual(response.body, b"ERROR")
 
     @gen_test
     def test_xsrf(self):
