@@ -10,6 +10,7 @@ import netplay_index
 import netplay_index.database as database
 import netplay_index.settings as settings
 import netplay_index.sessions as sessions
+import netplay_index.metrics as metrics
 
 LAST_SESSION_CLEANUP = 0
 
@@ -212,6 +213,7 @@ class Handler(RequestHandler):
     def get(self, api_version, action):
         """Answer get requests"""
         api_version = int(api_version)
+        metrics.API_REQUEST_COUNT.inc()
         if api_version != 0:
             self.write({"status": "BAD_VERSION"})
             self.set_status(400)

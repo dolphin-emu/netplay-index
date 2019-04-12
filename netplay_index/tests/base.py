@@ -36,16 +36,31 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
         }
 
         # Pretend that we are from the future so the test definitely has enough time to pass
-        session["timestamp"] = time.time() + 100
-
-        sessions.add_entry(session, "8.8.8.8")
+        sessions.add_entry(
+            self.generate_session(timestamp=time.time() + 100), "8.8.8.8"
+        )
 
         # Pretend this session is old so the clean-up process is triggered
-        session["timestamp"] = time.time() - 100
-
-        sessions.add_entry(session, "8.8.8.8")
+        sessions.add_entry(
+            self.generate_session(timestamp=time.time() - 100), "8.8.8.8"
+        )
 
         return app
+
+    def generate_session(self, timestamp=time.time()):
+        return {
+            "name": "My Server",
+            "region": "EU",
+            "method": "traversal",
+            "password": False,
+            "in_game": True,
+            "port": 2626,
+            "server_id": "test.id",
+            "player_count": 2,
+            "game": "Some Game",
+            "version": "5.0-666",
+            "timestamp": timestamp,
+        }
 
     async def bad_request(self, expected_code, expected_status, http_args):
         response = None

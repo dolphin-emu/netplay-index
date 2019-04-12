@@ -200,7 +200,7 @@ class SessionActiveTest(NetPlayIndexTest):
         )
 
         # PARSE_ERROR
-        secret = sessions.add_entry({}, "127.0.0.1")
+        secret = sessions.add_entry(self.generate_session(), "127.0.0.1")
 
         yield self.bad_request(
             400,
@@ -236,7 +236,7 @@ class SessionActiveTest(NetPlayIndexTest):
     def test_valid_request(self):
         """Valid request"""
         # Add faux session
-        secret = sessions.add_entry({}, "127.0.0.1")
+        secret = sessions.add_entry(self.generate_session(), "127.0.0.1")
 
         response = yield self.http_client.fetch(
             self.get_url(
@@ -268,7 +268,7 @@ class SessionRemoveTest(NetPlayIndexTest):
         """Valid request"""
 
         # Add faux session
-        secret = sessions.add_entry({}, "127.0.0.1")
+        secret = sessions.add_entry(self.generate_session(), "127.0.0.1")
 
         response = yield self.http_client.fetch(
             self.get_url("/v0/session/remove?secret={}".format(secret))

@@ -12,6 +12,7 @@ import netplay_index.login as login
 import netplay_index.database as database
 import netplay_index.util as util
 import netplay_index.admin as admin
+import netplay_index.metrics as metrics
 
 define("port", default=8000, help="Port to listen on", type=int)
 define("add_sysop", default=None, help="Add a new sysop via the command line")
@@ -35,6 +36,7 @@ def make_app():
     return tornado.web.Application(
         [
             (r"/", MainHandler),
+            (r"/metrics", metrics.MetricsHandler),
             (r"/v(?P<api_version>\d+)/(?P<action>[\w/]+)", api.Handler),
             (r"/login", login.login.Login),
             (r"/logout", login.login.Logout),
