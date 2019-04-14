@@ -15,9 +15,10 @@ class AdminHandler(RequestHandler):
         """Returns the view to render"""
         raise NotImplementedError
 
+    @abstractmethod
     def template_args(self):
-        """Additional arguments needed by templates"""
-        return {}
+        """Additional arguments needed by the template"""
+        raise NotImplementedError
 
     def set_error(self, error):
         """Set error"""
