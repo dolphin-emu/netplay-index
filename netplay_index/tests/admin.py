@@ -101,6 +101,35 @@ class AdminBaseTest(NetPlayIndexTest):
         self.assertEqual(response, None)
 
     @gen_test
+    def test_post_redirect(self):
+        login_cookie = yield self.login()
+
+        get = yield self.http_client.fetch(
+            self.get_url("/admin/server_list"),
+            headers={"Cookie": login_cookie},
+            follow_redirects=False,
+        )
+
+        self.assertEqual(get.code, 200)
+
+        xsrf = _get_xsrf(get.body, "session_remove")
+
+        response = None
+
+        try:
+            response = yield self.http_client.fetch(
+                self.get_url("/admin/server_list"),
+                headers={"Cookie": get.headers["Set-Cookie"]},
+                body="_xsrf=" + xsrf,
+                method="POST",
+                follow_redirects=False,
+            )
+        except tornado.httpclient.HTTPClientError as e:
+            self.assertEqual(e.code, 302)
+
+        self.assertEqual(response, None)
+
+    @gen_test
     def test_ajax(self):
         response = yield self.http_client.fetch(
             self.get_url("/admin/overview?ajax=1"), follow_redirects=False
