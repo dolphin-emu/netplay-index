@@ -18,37 +18,30 @@ class Handler(AdminHandler):
     def admin_post(self):
         """Handle actions"""
         action = self.get_argument("action", default=None)
+        host = self.get_argument("host", default=None)
         user = self.get_username()
 
-        if action == "ban_add":
-            if not database.can_ban(user):
-                self.set_error("Lacking permissions")
-                return
+        if not database.can_ban(user):
+            self.set_error("Lacking permissions")
+            return
 
-            host = self.get_argument("host", default=None)
+        if not host:
+            self.set_error("Missing parameters")
+            return
+
+        if action == "ban_add":
             reason = self.get_argument("reason", default=None)
 
-            if not host or not reason:
+            if not reason:
                 self.set_error("Missing parameters")
                 return
 
-            for entry in database.bans_get():
-                if entry[0] == host:
-                    self.set_error("Host is already banned")
-                    return
+            if database.is_host_banned(host):
+                self.set_error("Host is already banned")
+                return
 
             database.ban_add(host, user, reason)
             return
 
         if action == "ban_remove":
-            if not database.can_ban(user):
-                self.set_error("Lacking permissions")
-                return
-
-            host = self.get_argument("host", default=None)
-
-            if not host:
-                self.set_error("Missing parameters")
-                return
-
             database.ban_remove(host)
