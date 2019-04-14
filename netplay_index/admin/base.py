@@ -55,7 +55,7 @@ class AdminHandler(RequestHandler):
     def post(self):
         """Handle POST and forward it to child classes"""
         self.set_error("")
-        if not self.get_secure_cookie("logged_in"):
+        if not self.get_username():
             self.redirect("/login?view=" + self.view())
             return
 
@@ -66,7 +66,7 @@ class AdminHandler(RequestHandler):
     def get(self):
         """Handle GET and forward it to child classes"""
         self.set_error("")
-        if not self.get_secure_cookie("logged_in"):
+        if not self.get_username():
 
             if self.get_argument("ajax", default=False):
                 self.write("ERROR")
