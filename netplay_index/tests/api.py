@@ -88,12 +88,14 @@ class SessionAddTest(NetPlayIndexTest):
         password="1",
         player_count="10",
         server_id="1",
+        version="5.0-666",
+        revision="58d0e223547dd111d3e8975ad6ff7f1988fbddfe",
         method="direct",
         port="2626",
     ):
         """Return URL for testing purposes"""
         return self.get_url(
-            "/v0/session/add?name={}&region={}&game={}&in_game={}&password={}&player_count={}&server_id={}&version=5.0-666&method={}&port={}".format(
+            "/v0/session/add?name={}&region={}&game={}&in_game={}&password={}&player_count={}&server_id={}&version={}&revision={}&method={}&port={}".format(
                 name,
                 region,
                 game,
@@ -101,6 +103,8 @@ class SessionAddTest(NetPlayIndexTest):
                 password,
                 player_count,
                 server_id,
+                version,
+                revision,
                 method,
                 port,
             )

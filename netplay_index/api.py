@@ -68,6 +68,7 @@ class Handler(RequestHandler):
             "in_game",
             "password",
             "version",
+            "revision",
             "method",
         ]:
             new_session[key] = self.get_argument(key, default=None, strip=True)
@@ -177,6 +178,7 @@ class Handler(RequestHandler):
         password = self.get_argument("password", default=None)
         region = self.get_argument("region", default=None)
         version = self.get_argument("version", default=None)
+        revision = self.get_argument("revision", default=None)
         in_game = self.get_argument("in_game", default=None)
 
         filtered_sessions = list(sessions.get_all().values())
@@ -192,6 +194,9 @@ class Handler(RequestHandler):
 
         if version is not None:
             filtered_sessions = _filter_string(filtered_sessions, "version", version)
+
+        if revision is not None:
+            filtered_sessions = _filter_string(filtered_sessions, "revision", revision)
 
         try:
             if password is not None:

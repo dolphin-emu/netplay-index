@@ -33,6 +33,7 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
             "player_count": 2,
             "game": "Some Game",
             "version": "5.0-666",
+            "revision": "58d0e223547dd111d3e8975ad6ff7f1988fbddfe",
         }
 
         # Pretend that we are from the future so the test definitely has enough time to pass
@@ -59,6 +60,7 @@ class NetPlayIndexTest(AsyncHTTPTestCase):
             "player_count": 2,
             "game": "Some Game",
             "version": "5.0-666",
+            "revision": "58d0e223547dd111d3e8975ad6ff7f1988fbddfe",
             "timestamp": timestamp,
         }
 
