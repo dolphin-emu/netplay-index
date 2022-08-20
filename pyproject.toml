@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "netplay-index"
+version = "0.1.0"
+description = "Dolphin's NetPlay Index / Lobby Server"
+authors = ["spycrab"]
+license = "GPL-3.0-or-later"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+tornado = "^6.0.2"
+bcrypt = "^3.1.6"
+geoip2 = "^2.9.0"
+prometheus-client = "^0.6.0"
+
+[tool.poetry.dev-dependencies]
+tornado-utils = "^1.6"
+beautifulsoup4 = "^4.6.0"
+coveralls = "^1.7.0"
+coverage = "^4.5.3"
+black = "^22.6.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

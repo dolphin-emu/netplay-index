@@ -14,24 +14,26 @@ A NetPlay Index server for Dolphin.
 
 ## Requirements
 
-- Python 3 and pip
+- Python 3 and Poetry
 - [GeoLite2 Country](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 
 ## Setup
 
+This project uses [Poetry](https://python-poetry.org/) for dependency
+management.
+
 ```bash
-# Install dependencies
-pip3 install -r requirements.txt
+# Install dependencies (use --no-dev to skip optional dev dependencies).
+poetry install
 
 # Run tests (Optional)
-pip3 install -r test_requirements.txt
-python3 -m netplay_index.tests.runtests
+poetry run python3 -m netplay_index.tests.runtests
 
 # Creates a sysop account and gives you a randomly generated password (can be changed later)
-python3 -m netplay_index --add_sysop=SYSOP_NAME
+poetry run python3 -m netplay_index --add_sysop=SYSOP_NAME
 
 # Run the server
-python3 -m netplay_index
+poetry run python3 -m netplay_index
 ```
 
 ## Contributing

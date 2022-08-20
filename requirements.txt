@@ -1,5 +1,0 @@
-tornado==6.0.2
-bcrypt==3.1.6
-geoip2==2.9.0
-prometheus-client==0.6.0
-

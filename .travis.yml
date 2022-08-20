@@ -3,12 +3,10 @@ language: python
 python:
   - "3.7"
 before_script:
-  - pip install -r test_requirements.txt
-  - wget https://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz
-  - tar -xf GeoLite2-Country.tar.gz
-  - mv GeoLite2-Country_*/GeoLite2-Country.mmdb .
+  - pip install poetry
+  - wget https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb
 script:
-  - coverage run -m netplay_index.tests.runtests
+  - poetry run coverage run -m netplay_index.tests.runtests
 after_success:
-  - coveralls
-  - black --check .
+  - poetry run coveralls
+  - poetry run black --check .
