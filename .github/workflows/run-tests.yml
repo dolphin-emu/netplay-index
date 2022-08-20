@@ -1,0 +1,60 @@
+name: Run tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  # Inspiration taken from https://jacobian.org/til/github-actions-poetry/
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    - name: Cache Poetry install
+      uses: actions/cache@v2
+      with:
+        path: ~/.local
+        key: poetry-1.1.14-0
+
+    - uses: snok/install-poetry@v1
+      with:
+        version: 1.1.14
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: .venv
+        key: pydeps-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Install dependencies (if uncached)
+      run: poetry install --no-interaction --no-root
+      if: steps.cache-deps.outputs.cache-hit != 'true'
+
+    - name: Install netplay-index
+      run: poetry install --no-interaction
+
+    - name: Download GeoLite2 database
+      run: wget https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb
+
+    - name: Run unit tests
+      run: poetry run pytest --cov=netplay_index
+
+    - name: Upload coverage information
+      run: poetry run coveralls --service=github
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check coding style
+      run: poetry run black --check .
