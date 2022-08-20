@@ -18,10 +18,11 @@ prometheus-client = "^0.6.0"
 [tool.poetry.dev-dependencies]
 tornado-utils = "^1.6"
 beautifulsoup4 = "^4.6.0"
-coveralls = "^1.7.0"
-coverage = "^4.5.3"
+coveralls = "^3.3.1"
+coverage = "^6.4.4"
 black = "^22.6.0"
 pytest = "^7.1.2"
+pytest-cov = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
