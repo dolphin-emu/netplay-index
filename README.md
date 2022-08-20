@@ -27,7 +27,7 @@ management.
 poetry install
 
 # Run tests (Optional)
-poetry run python3 -m netplay_index.tests.runtests
+poetry run pytest
 
 # Creates a sysop account and gives you a randomly generated password (can be changed later)
 poetry run netplay-index --add_sysop=SYSOP_NAME
