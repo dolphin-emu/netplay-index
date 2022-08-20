@@ -1,5 +1,5 @@
 # NetPlay Index
-[![Build Status](https://travis-ci.org/dolphin-emu/netplay-index.svg?branch=master)](https://travis-ci.org/dolphin-emu/netplay-index)
+[![Build Status](https://github.com/dolphin-emu/netplay-index/actions/workflows/run-tests.yml/badge.svg)](https://github.com/dolphin-emu/netplay-index/actions/workflows/run-tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/dolphin-emu/netplay-index/badge.svg?branch=master)](https://coveralls.io/github/dolphin-emu/netplay-index?branch=master)
 <a href="https://github.com/ambv/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
 
