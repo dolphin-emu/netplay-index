@@ -19,6 +19,16 @@ A NetPlay Index server for Dolphin.
 
 ## Setup
 
+### Using Nix
+
+Note: this requires Nix Flakes to be enabled on your system.
+
+```bash
+nix run github:dolphin-emu/netplay-index
+```
+
+### Without Nix
+
 This project uses [Poetry](https://python-poetry.org/) for dependency
 management.
 
