@@ -10,7 +10,7 @@
     overlay = nixpkgs.lib.composeManyExtensions [
       poetry2nix.overlay
       (final: prev: {
-        netplay-lobby = prev.poetry2nix.mkPoetryApplication {
+        netplay-index = prev.poetry2nix.mkPoetryApplication {
           projectDir = ./.;
           checkPhase = "GEOIP_DATABASE_PATH=testdata/GeoLite2-Country.mmdb pytest";
         };
@@ -23,8 +23,8 @@
         overlays = [ self.overlay ];
       };
     in rec {
-      packages.netplay-lobby = pkgs.netplay-lobby;
-      defaultPackage = pkgs.netplay-lobby;
+      packages.netplay-index = pkgs.netplay-index;
+      defaultPackage = pkgs.netplay-index;
 
       devShells.default = with pkgs; mkShell {
         buildInputs = [ python3Packages.poetry ];
