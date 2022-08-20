@@ -1,5 +1,7 @@
 """Global Settings"""
 
+import os
+
 ## API
 
 # How long until timed-out sessions are cleaned up
@@ -17,7 +19,7 @@ SESSION_MAX_STRING_LENGTH = 64
 # The maximum amount of sessions a single host can have simultaneously
 MAXIMUM_SESSIONS_PER_HOST = 5
 
-GEOIP_DATABASE_PATH = "GeoLite2-Country.mmdb"
+GEOIP_DATABASE_PATH = os.environ.get("GEOIP_DATABASE_PATH", "GeoLite2-Country.mmdb")
 
 ## Login
 

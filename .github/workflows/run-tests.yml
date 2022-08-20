@@ -45,11 +45,10 @@ jobs:
     - name: Install netplay-index
       run: poetry install --no-interaction
 
-    - name: Download GeoLite2 database
-      run: wget https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-Country.mmdb
-
     - name: Run unit tests
       run: poetry run pytest --cov=netplay_index
+      env:
+        GEOIP_DATABASE_PATH: testdata/GeoLite2-Country.mmdb
 
     - name: Upload coverage information
       run: poetry run coveralls --service=github

@@ -27,7 +27,7 @@ management.
 poetry install
 
 # Run tests (Optional)
-poetry run pytest
+GEOIP_DATABASE_PATH=testdata/GeoLite2-Country.mmdb poetry run pytest
 
 # Creates a sysop account and gives you a randomly generated password (can be changed later)
 poetry run netplay-index --add_sysop=SYSOP_NAME
