@@ -9,3 +9,6 @@ __pycache__
 # Coverage files
 .coverage
 *,cover
+
+# Nix build output
+result
