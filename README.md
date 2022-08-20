@@ -30,10 +30,10 @@ poetry install
 poetry run python3 -m netplay_index.tests.runtests
 
 # Creates a sysop account and gives you a randomly generated password (can be changed later)
-poetry run python3 -m netplay_index --add_sysop=SYSOP_NAME
+poetry run netplay-index --add_sysop=SYSOP_NAME
 
 # Run the server
-poetry run python3 -m netplay_index
+poetry run netplay-index
 ```
 
 ## Contributing

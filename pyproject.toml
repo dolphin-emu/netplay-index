@@ -5,6 +5,9 @@ description = "Dolphin's NetPlay Index / Lobby Server"
 authors = ["spycrab"]
 license = "GPL-3.0-or-later"
 
+[tool.poetry.scripts]
+netplay-index = "netplay_index.__main__:main"
+
 [tool.poetry.dependencies]
 python = "^3.7"
 tornado = "^6.0.2"

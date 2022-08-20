@@ -52,7 +52,7 @@ def make_app():
     )
 
 
-if __name__ == "__main__":
+def main():
     parse_command_line()
 
     APP = make_app()
@@ -75,3 +75,6 @@ if __name__ == "__main__":
     APP.listen(options.port)
     print("Listening on port {}...".format(options.port))
     tornado.ioloop.IOLoop.current().start()
+
+if __name__ == "__main__":
+    main()
