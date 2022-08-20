@@ -26,7 +26,7 @@
       defaultPackage = pkgs.netplay-lobby;
 
       devShells.default = with pkgs; mkShell {
-        inputsFrom = [ python3Packages.poetry ];
+        buildInputs = [ python3Packages.poetry ];
       };
     }
   ));
