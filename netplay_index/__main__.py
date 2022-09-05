@@ -14,6 +14,7 @@ import netplay_index.util as util
 import netplay_index.admin as admin
 import netplay_index.metrics as metrics
 
+define("bind_address", default="127.0.0.1", help="Address to listen on", type=str)
 define("port", default=8000, help="Port to listen on", type=int)
 define("add_sysop", default=None, help="Add a new sysop via the command line")
 define("reset_pw", default=None, help="Reset the password of a given user")
@@ -72,8 +73,8 @@ def main():
         print("New password for {}: {}".format(options.reset_pw, RANDOM_PW))
         exit(0)
 
-    APP.listen(options.port)
-    print("Listening on port {}...".format(options.port))
+    APP.listen(options.port, options.bind_address)
+    print("Listening on {}:{}...".format(options.bind_address, options.port))
     tornado.ioloop.IOLoop.current().start()
 
 
