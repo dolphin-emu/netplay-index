@@ -8,7 +8,7 @@
 
   outputs = { self, nixpkgs, flake-utils, poetry2nix }: {
     overlay = nixpkgs.lib.composeManyExtensions [
-      poetry2nix.overlay
+      poetry2nix.overlays.default
       (final: prev: {
         netplay-index = prev.poetry2nix.mkPoetryApplication {
           projectDir = ./.;
