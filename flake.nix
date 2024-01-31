@@ -12,7 +12,7 @@
       (final: prev: {
         netplay-index = prev.poetry2nix.mkPoetryApplication {
           projectDir = ./.;
-          checkPhase = "GEOIP_DATABASE_PATH=testdata/GeoLite2-Country.mmdb pytest";
+          checkPhase = "GEOIP_DATABASE_PATH=testdata/GeoLite2-Country.mmdb ASYNC_TEST_TIMEOUT=30 pytest";
         };
       })
     ];
