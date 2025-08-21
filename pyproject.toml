@@ -1,29 +1,31 @@
-[tool.poetry]
+[project]
 name = "netplay-index"
 version = "0.1.0"
 description = "Dolphin's NetPlay Index / Lobby Server"
-authors = ["spycrab"]
+authors = [{ name = "spycrab" }]
+requires-python = ">=3.10,<3.11"
 license = "GPL-3.0-or-later"
+dependencies = [
+    "tornado>=6.0.2,<7",
+    "bcrypt>=3.1.6,<4",
+    "geoip2>=2.9.0,<3",
+    "prometheus-client>=0.6.0,<0.7",
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 netplay-index = "netplay_index.__main__:main"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-tornado = "^6.0.2"
-bcrypt = "^3.1.6"
-geoip2 = "^2.9.0"
-prometheus-client = "^0.6.0"
-
-[tool.poetry.dev-dependencies]
-tornado-utils = "^1.6"
-beautifulsoup4 = "^4.6.0"
-coveralls = "^3.3.1"
-coverage = "^6.4.4"
-black = "^22.6.0"
-pytest = "^7.1.2"
-pytest-cov = "^3.0.0"
+[dependency-groups]
+dev = [
+    "tornado-utils~=1.6",
+    "beautifulsoup4>=4.6.0,<5",
+    "coveralls>=3.3.1,<4",
+    "coverage>=6.4.4,<7",
+    "black>=22.6.0,<23",
+    "pytest>=7.1.2,<8",
+    "pytest-cov>=3.0.0,<4",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
