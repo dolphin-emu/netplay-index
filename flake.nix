@@ -27,7 +27,7 @@
       defaultPackage = pkgs.netplay-index;
 
       devShells.default = with pkgs; mkShell {
-        buildInputs = [ python3Packages.poetry ];
+        buildInputs = [ poetry uv ];
       };
     }
   ));
