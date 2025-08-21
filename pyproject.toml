@@ -9,7 +9,7 @@ dependencies = [
     "tornado>=6.0.2,<7",
     "bcrypt>=3.1.6,<4",
     "geoip2>=2.9.0,<3",
-    "prometheus-client>=0.6.0,<0.7",
+    "prometheus-client>=0.22.1,<0.23",
 ]
 
 [project.scripts]
