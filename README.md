@@ -14,7 +14,7 @@ A NetPlay Index server for Dolphin.
 
 ## Requirements
 
-- Python 3 and Poetry
+- Python 3.10 and uv
 - [GeoLite2 Country](https://dev.maxmind.com/geoip/geoip2/geolite2/)
 
 ## Setup
@@ -29,21 +29,21 @@ nix run github:dolphin-emu/netplay-index
 
 ### Without Nix
 
-This project uses [Poetry](https://python-poetry.org/) for dependency
+This project uses [uv](https://github.com/astral-sh/uv) for dependency
 management.
 
 ```bash
-# Install dependencies (use --no-dev to skip optional dev dependencies).
-poetry install
+# Install dependencies.
+uv sync
 
 # Run tests (Optional)
-GEOIP_DATABASE_PATH=testdata/GeoLite2-Country.mmdb poetry run pytest
+GEOIP_DATABASE_PATH=testdata/GeoLite2-Country.mmdb uv run pytest
 
 # Creates a sysop account and gives you a randomly generated password (can be changed later)
-poetry run netplay-index --add_sysop=SYSOP_NAME
+uv run netplay-index --add_sysop=SYSOP_NAME
 
 # Run the server
-poetry run netplay-index
+uv run netplay-index
 ```
 
 ## Contributing
