@@ -12,7 +12,12 @@ SECRET_KEY_LENGTH = 10
 def get_ip_region(ip):
     reader = geoip2.database.Reader(settings.GEOIP_DATABASE_PATH)
     try:
-        return reader.country(ip).country.iso_code.lower()
+        iso_code = reader.country(ip).country.iso_code
+
+        if iso_code is None:
+            return None
+
+        return iso_code.lower()
     except geoip2.errors.AddressNotFoundError:
         return None
 
