@@ -9,7 +9,7 @@ license = "GPL-3.0-or-later"
 netplay-index = "netplay_index.__main__:main"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.10"
 tornado = "^6.0.2"
 bcrypt = "^3.1.6"
 geoip2 = "^2.9.0"
