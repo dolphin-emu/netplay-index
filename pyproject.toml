@@ -6,10 +6,10 @@ authors = [{ name = "spycrab" }]
 requires-python = ">=3.13,<3.14"
 license = "GPL-3.0-or-later"
 dependencies = [
-    "tornado>=6.0.2,<7",
-    "bcrypt>=3.1.6,<4",
-    "geoip2>=2.9.0,<3",
-    "prometheus-client>=0.22.1,<0.23",
+    "tornado>=6.5.8,<7",
+    "bcrypt>=5.0.0,<6",
+    "geoip2>=5.3.0,<6",
+    "prometheus-client>=0.26.0,<0.27",
 ]
 
 [project.scripts]
@@ -18,14 +18,14 @@ netplay-index = "netplay_index.__main__:main"
 [dependency-groups]
 dev = [
     "tornado-utils~=1.6",
-    "beautifulsoup4>=4.6.0,<5",
-    "coveralls>=3.3.1,<4",
-    "coverage>=6.4.4,<7",
-    "black>=22.6.0,<23",
-    "pytest>=7.1.2,<8",
-    "pytest-cov>=3.0.0,<4",
+    "beautifulsoup4>=4.15.0,<5",
+    "coveralls>=4.1.0,<5",
+    "coverage>=7.15.4,<8",
+    "black>=26.5.1,<27",
+    "pytest>=9.1.1,<10",
+    "pytest-cov>=7.1.0,<8",
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.32.0,<2"]
 build-backend = "hatchling.build"
