@@ -27,3 +27,8 @@ jobs:
 
     - name: Check coding style
       run: uv run black --check .
+
+    - name: Run unit tests
+      run: uv run pytest --cov=netplay_index
+      env:
+        GEOIP_DATABASE_PATH: testdata/GeoLite2-Country.mmdb
