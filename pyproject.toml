@@ -3,7 +3,7 @@ name = "netplay-index"
 version = "0.1.0"
 description = "Dolphin's NetPlay Index / Lobby Server"
 authors = [{ name = "spycrab" }]
-requires-python = ">=3.10,<3.11"
+requires-python = ">=3.13,<3.14"
 license = "GPL-3.0-or-later"
 dependencies = [
     "tornado>=6.0.2,<7",
