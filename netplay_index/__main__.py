@@ -19,6 +19,7 @@ define("port", default=8000, help="Port to listen on", type=int)
 define("add_sysop", default=None, help="Add a new sysop via the command line")
 define("reset_pw", default=None, help="Reset the password of a given user")
 
+
 # pylint: disable=W0223
 class MainHandler(RequestHandler):
     """Handler for root requests"""
