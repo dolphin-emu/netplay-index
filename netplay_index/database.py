@@ -45,30 +45,24 @@ def initialize():
     cur.execute("pragma user_version=" + str(DB_REVISION))
 
     # Initialize users
-    cur.execute(
-        """
+    cur.execute("""
 CREATE TABLE IF NOT EXISTS users
 (username TEXT PRIMARY KEY, password TEXT, sysop BOOL, can_ban BOOL,
- can_modify_blacklist BOOL)"""
-    )
+ can_modify_blacklist BOOL)""")
 
     # Initialize blacklist
-    cur.execute(
-        """
+    cur.execute("""
 CREATE TABLE IF NOT EXISTS bans
 
 (host TEXT PRIMARY KEY, date_added DATETIME DEFAULT CURRENT_TIMESTAMP,
- added_by TEXT, reason TEXT)"""
-    )
+ added_by TEXT, reason TEXT)""")
 
     # Initialize ban list
-    cur.execute(
-        """
+    cur.execute("""
 CREATE TABLE IF NOT EXISTS blacklist
 (word TEXT PRIMARY KEY, date_added DATETIME DEFAULT CURRENT_TIMESTAMP,
  added_by TEXT, reason TEXT)
-"""
-    )
+""")
 
     print("Initialized database successfully.")
 

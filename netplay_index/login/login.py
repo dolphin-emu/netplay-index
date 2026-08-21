@@ -7,6 +7,7 @@ from tornado.web import RequestHandler
 import netplay_index.database as database
 import netplay_index.settings as settings
 
+
 # pylint: disable=W0223
 class Logout(RequestHandler):
     """Logout handler"""

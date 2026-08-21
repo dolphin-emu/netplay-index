@@ -3,6 +3,7 @@
 from netplay_index.admin.base import AdminHandler
 import netplay_index.sessions as sessions
 
+
 # pylint: disable=W0223
 class Handler(AdminHandler):
     def template_args(self):
