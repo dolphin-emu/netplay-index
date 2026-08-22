@@ -57,26 +57,29 @@ def make_app():
 def main():
     parse_command_line()
 
-    APP = make_app()
+    try:
+        APP = make_app()
 
-    if APP is None:
-        exit(1)
+        if APP is None:
+            exit(1)
 
-    if options.add_sysop is not None:
-        RANDOM_PW = util.generate_secret()
-        database.add_login(options.add_sysop, RANDOM_PW, True)
-        print("Password for {}: {}".format(options.add_sysop, RANDOM_PW))
-        exit(0)
+        if options.add_sysop is not None:
+            RANDOM_PW = util.generate_secret()
+            database.add_login(options.add_sysop, RANDOM_PW, True)
+            print("Password for {}: {}".format(options.add_sysop, RANDOM_PW))
+            exit(0)
 
-    if options.reset_pw is not None:
-        RANDOM_PW = util.generate_secret()
-        database.update_login(options.reset_pw, RANDOM_PW)
-        print("New password for {}: {}".format(options.reset_pw, RANDOM_PW))
-        exit(0)
+        if options.reset_pw is not None:
+            RANDOM_PW = util.generate_secret()
+            database.update_login(options.reset_pw, RANDOM_PW)
+            print("New password for {}: {}".format(options.reset_pw, RANDOM_PW))
+            exit(0)
 
-    APP.listen(options.port, options.bind_address)
-    print("Listening on {}:{}...".format(options.bind_address, options.port))
-    tornado.ioloop.IOLoop.current().start()
+        APP.listen(options.port, options.bind_address)
+        print("Listening on {}:{}...".format(options.bind_address, options.port))
+        tornado.ioloop.IOLoop.current().start()
+    finally:
+        database.close()
 
 
 if __name__ == "__main__":
