@@ -18,6 +18,19 @@ def _commit():
     CONNECTION.commit()
 
 
+def close():
+    """Close the active database connection."""
+
+    # pylint: disable=W0603
+    global CONNECTION
+
+    connection = CONNECTION
+    CONNECTION = None
+
+    if connection is not None:
+        connection.close()
+
+
 def _hash_password(password):
     """Hashes a password for storing in the database"""
 
