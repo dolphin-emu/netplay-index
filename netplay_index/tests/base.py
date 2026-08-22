@@ -16,6 +16,12 @@ import netplay_index.database as database
 class NetPlayIndexTest(AsyncHTTPTestCase):
     """Base class for tests"""
 
+    def tearDown(self):
+        try:
+            super().tearDown()
+        finally:
+            database.close()
+
     def get_app(self):
         # This greatly speeds up running tests
         settings.LOGIN_ATTEMPT_DELAY = 0

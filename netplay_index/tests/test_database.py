@@ -6,7 +6,15 @@ import netplay_index.database as database
 from unittest import TestCase
 
 
-class BanTest(TestCase):
+class DatabaseTest(TestCase):
+    def setUp(self):
+        database.initialize()
+
+    def tearDown(self):
+        database.close()
+
+
+class BanTest(DatabaseTest):
     def runTest(self):
         can_ban = database.can_ban("test_user3")
         self.assertEqual(can_ban, False)
@@ -22,7 +30,7 @@ class BanTest(TestCase):
         database.delete_login("test_user")
 
 
-class BlacklistTest(TestCase):
+class BlacklistTest(DatabaseTest):
     def runTest(self):
         can_blacklist = database.can_modify_blacklist("test_user3")
         self.assertEqual(can_blacklist, False)
